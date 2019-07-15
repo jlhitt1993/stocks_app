@@ -15,6 +15,35 @@ def helpme():
     print('Help is on the way')
 
 
+def spectrum(x, y):
+    pl.plot(x, y)
+    pl.show()
+
+
+def correlation(x, y):
+    c = np.corrcoef(x, y)[0][1]
+    print('Corrcoef: ', c)
+    pl.scatter(x, y, s=1, label = 'test')
+    legend = pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10)
+    #legend.set_sizes([34])
+    pl.show()
+
+
+def percent_change(stock):
+    pc = []
+    for i in stock:
+        pc.append(stock[i+1]-stock[i])/stock[i]
+    spectrum(pc, stock)
+
+
+def fourier():
+    print()
+
+
+def scaled():
+    print()
+
+
 class Stock:
     def __init__(self, ticker):
         self.name = ticker
@@ -40,29 +69,6 @@ class Stock:
             count += 1
         print('Got: ' + ticker)
         time.sleep(1.5)
-
-
-def spectrum(x, y):
-    pl.plot(x, y)
-    pl.show()
-
-
-def correlation(x, y):
-    c = np.corrcoef(x, y)[0][1]
-    print('Corrcoef: ', c)
-    pl.scatter(x, y, s=1, label = 'test')
-    legend = pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10)
-    #legend.set_sizes([34])
-    pl.show()
-
-
-def scaled():
-
-
-def percent_change():
-
-
-def fourier():
 
 
 aapl = Stock('aapl')
