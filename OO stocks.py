@@ -15,25 +15,47 @@ def helpme():
     print('Help is on the way')
 
 
-def spectrum(x, y):
+def spectrum(*args):
+    x, y = [[]]
+    count = 0
+    for i in args:
+        count +=1
+    if count % 2 != 0:
+
+
+            x[i].append()
+
+            y[i].append()
+
     pl.plot(x, y)
     pl.show()
 
 
-def correlation(x, y):
+def correlation(**kwargs):
+
+
     c = np.corrcoef(x, y)[0][1]
     print('Corrcoef: ', c)
-    pl.scatter(x, y, s=1, label = 'test')
+    pl.scatter(xs, ys, s=1, label = )
     legend = pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10)
     #legend.set_sizes([34])
     pl.show()
 
 
-def percent_change(stock):
-    pc = []
-    for i in stock:
-        pc.append(stock[i+1]-stock[i])/stock[i]
-    spectrum(pc, stock)
+def percent_change(*args):
+    pc = [[]]
+    for h in range(len(args)):
+        for i in range(len(args[h])-1):
+            pc[h].append((args[h][i+1]-args[h][i])/(args[h][i]))
+        pl.subplot(len(args), 1, h + 1)
+        pl.scatter(args[h][:-1], pc[h], s=1, label=h)
+        if h == 0:
+            pl.title('Percent change', fontsize=30)
+            pl.xlabel('day', fontsize=26)
+        pl.legend(loc='upper right', prop={'size': 16})
+        pl.ylabel('percent change', fontsize=26)
+        pc.append([])
+    pl.show()
 
 
 def fourier():
@@ -68,10 +90,11 @@ class Stock:
             self.days.append(count)   # count is number of days for each tick
             count += 1
         print('Got: ' + ticker)
-        time.sleep(1.5)
+        time.sleep(0.5)
 
 
 aapl = Stock('aapl')
 amd = Stock('amd')
+percent_change(aapl.high, amd.low, amd.high,aapl.volume)
 
 
