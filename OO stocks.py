@@ -12,11 +12,16 @@ url = "https://www.alphavantage.co/query"
 api_key = 'BY1OVG40O9CEKQY4'
 
 
-class Stock:
-    def __init__(self, arg):
-        self.name = str(arg)
-        request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + str(arg) +
-                                '&outputsize=full&interval=1min&apikey=' + api_key)
+class Name:
+    def __init__(self, name):
+        self.name = name
+
+
+class Stock(Name):
+    def __init__(self, name):
+        Name.__init__(self, name)
+        request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + name +
+                           '&outputsize=full&interval=1min&apikey=' + api_key)
         response = urllib.request.urlopen(request)
         data = json.load(response)
         prices = data['Time Series (Daily)']
@@ -35,8 +40,16 @@ class Stock:
             self.volume.append(float(prices[d]['5. volume']))
             self.days.append(count)   # count is number of days for each tick
             count += 1
-        print('Got: ' + str(arg) + '')
+        print('Got: ' + name + '')
         time.sleep(0.5)
+
+
+Stocks = {}
+
+
+def stocks(*args):
+    for arg in args:
+        Stocks[arg] = Stock(arg)
 
 
 def help():
@@ -48,28 +61,31 @@ def help():
 
 
 def spectrum(*args):
-    x, y, c = [], [], 0
+    x, y, label, c = [], [], [], 0
     for arg in args:
         c += 1
-    if c % 2 != 0:
-        print('must pass pairs of x,y data\n')
+    if c % 3 != 0:
+        print('must pass pairs of x,y data with the legend label after\n')
         return -1
     counter = 0
     for arg in args:
-        if counter % 2 == 0:
+        if counter % 3 == 0:
             x.append(arg)
-        else:
+        if counter % 3 == 1:
             y.append(arg)
+        if counter % 3 == 2:
+            label.append(arg)
         counter += 1
-    for i in range(c//2):
-        pl.plot(x[i], y[i])
+    for i in range(c//3):
+        pl.plot(x[i], y[i], label=label[i])
+    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8)
     pl.show()
 
 
 def correlation(*args):
     print(len(args))
     for i in range(len(args)-1):
-        for ii in range(i+1, len(args)+1-i):
+        for ii in range(i+1, len(args)):
             c = np.corrcoef(args[i], args[ii])[0][1]
             print('Corrcoef: ', c)
             pl.scatter(args[i], args[ii], s=1, label=i+ii)
@@ -107,10 +123,10 @@ def fourier(*args):
         half = len(arg) // 2
         if counter % 2 == 0:
             x.append(arg)
-        else:
+        if counter % 2 == 1:
             if len(arg) % 2 == 0:
                 y.append(np.abs(fft(arg)[0:half]))
-            else:
+            if len(arg) % 2 == 1:
                 y.append(np.abs(fft(arg)[0:half]))
         counter += 1
     for i in range(c//2):
@@ -125,11 +141,12 @@ def fourier(*args):
 #    print()
 
 
+
 aapl = Stock('aapl')
 amd = Stock('amd')
-#correlation(aapl.close,aapl.high, amd.high)
+#correlation(aapl.close, aapl.high, amd.close)
 #percent_change(aapl.high, amd.low)
 #print(amd.per_ch)
-#spectrum(amd.days, amd.high, aapl.days, aapl.low)
+spectrum(amd.days, amd.high, 'amd high', aapl.days, aapl.low, 'aapl low')
 #helpme()
 
