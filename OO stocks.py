@@ -61,23 +61,31 @@ def help():
 
 
 def spectrum(*args):
-    x, y, label, c = [], [], [], 0
-    for arg in args:
-        c += 1
-    if c % 3 != 0:
-        print('must pass pairs of x,y data with the legend label after\n')
+    sts, st, tag = [], [], []
+    c = len(args)
+    if c % 2 != 0:
+        print('must pass a stock with the legend label after \nUse help() for more info')
         return -1
     counter = 0
     for arg in args:
-        if counter % 3 == 0:
-            x.append(arg)
-        if counter % 3 == 1:
-            y.append(arg)
-        if counter % 3 == 2:
-            label.append(arg)
+        if counter % 2 == 0:
+            st.append(arg)
+        if counter % 2 == 1:
+            tag.append(arg)
         counter += 1
-    for i in range(c//3):
-        pl.plot(x[i], y[i], label=label[i])
+    for i in range(len(st)):
+        if tag[i] == 'high':
+            sts.append(st[i].high)
+        if tag[i] == 'low':
+            sts.append(st[i].low)
+        if tag[i] == 'open':
+            sts.append(st[i].open)
+        if tag[i] == 'close':
+            sts.append(st[i].close)
+        if tag[i] == 'volume':
+            sts.append(st[i].volume)
+    for i in range(len(sts)):
+        pl.plot(st[i].days, sts[i], label=st[i].name + '-' + tag[i])
     pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8)
     pl.show()
 
@@ -144,9 +152,10 @@ def fourier(*args):
 
 aapl = Stock('aapl')
 amd = Stock('amd')
+msft = Stock('msft')
 #correlation(aapl.close, aapl.high, amd.close)
 #percent_change(aapl.high, amd.low)
 #print(amd.per_ch)
-spectrum(amd.days, amd.high, 'amd high', aapl.days, aapl.low, 'aapl low')
+spectrum(amd, 'high', aapl, 'high', msft, 'volume')
 #helpme()
 
