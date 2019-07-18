@@ -55,10 +55,10 @@ def stocks(*args):
 
 def help():
     print('Welcome to help.\nStart by getting data about a stock ex. aapl = Stock(\'aapl\')')
-    print('Afterwards, you can access data of daily high, low, open, close and volume like aapl.high')
-    print('You can make plots like spectrum(aapl.high, amd.high). Other plots are correlation(),'
+    print('Afterwards, you can access data of daily high, low, open, close and volume by aapl.high')
+    print('You can make plots by spectrum(aapl, \'high\', amd, \'high\'). Other plots are correlation(),'
           'percent_change() and fourier()')
-    print('For more help, see the documentation at www.placeholder.com')
+    print('For more help, see the documentation and examples at www.placeholder.com')
 
 
 def spectrum(*args):
@@ -66,7 +66,7 @@ def spectrum(*args):
     c = len(args)
     if c % 2 != 0:
         print('must pass a stock with the legend label after \nUse help() for more info')
-        return -1
+        return
     counter = 0
     for arg in args:
         if counter % 2 == 0:
@@ -87,18 +87,38 @@ def spectrum(*args):
             sts.append(st[i].volume)
     for i in range(len(sts)):
         pl.plot(st[i].days, sts[i], label=st[i].name + '-' + tag[i])
-    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8)
+    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=7)
     pl.show()
 
 
 def correlation(*args):
-    print(len(args))
-    for i in range(len(args)-1):
-        for ii in range(i+1, len(args)):
-            c = np.corrcoef(args[i], args[ii])[0][1]
+    if len(args) % 2 == 0 or len(args) < 4:
+        print('Must pass at least two stocks and data labels \nUse help() for more info')
+        return
+    counter, tag, st, sts = 0, [], [], []
+    for arg in args:
+        if counter % 2 == 0:
+            st.append(arg)
+        if counter % 2 == 1:
+            tag.append(arg)
+        counter += 1
+    for i in range(len(st)):
+        if tag[i] == 'high':
+            sts.append(st[i].high)
+        if tag[i] == 'low':
+            sts.append(st[i].low)
+        if tag[i] == 'open':
+            sts.append(st[i].open)
+        if tag[i] == 'close':
+            sts.append(st[i].close)
+        if tag[i] == 'volume':
+            sts.append(st[i].volume)
+    for i in range(len(sts)-1):
+        for ii in range(i+1, len(sts)):
+            c = np.corrcoef(sts[i], sts[ii])[0][1]
             print('Corrcoef: ', c)
-            pl.scatter(args[i], args[ii], s=1, label=i+ii)
-            legend = pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10)
+            pl.scatter(sts[i], sts[ii], s=1, label=st[i].name + '-' + tag[i] + '/' + st[ii].name + '-' + tag[ii])
+    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10, markerscale=7)
     #legend.set_sizes([34])
     pl.show()
 
@@ -114,7 +134,7 @@ def percent_change(*args):
         if h == 0:
             pl.title('Percent change', fontsize=30)
             pl.xlabel('day', fontsize=26)
-        pl.legend(loc='upper right', prop={'size': 16})
+        pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
         pl.ylabel('percent change', fontsize=26)
         pc.append([])
     pl.show()
@@ -126,7 +146,7 @@ def fourier(*args):
         c += 1
     if c % 2 != 0:
         print('must pass stock and data label \nUse help() for more info')
-        return -1
+        return
     counter = 0
     for arg in args:
         half = len(arg) // 2
@@ -143,6 +163,7 @@ def fourier(*args):
     pl.xlabel('days', fontsize=26)
     pl.title('Fourier transform', fontsize=30)
     pl.ylabel('FT', fontsize=26)
+    pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     pl.show()
     return
 
@@ -155,7 +176,7 @@ aapl = Stock('aapl')
 amd = Stock('amd')
 msft = Stock('msft')
 #msft = Stock('msft')
-#correlation(aapl.close, aapl.high, amd.close)
+#correlation(aapl,'high',amd, 'low')
 #percent_change(aapl.high, amd.low)
 #print(amd.per_ch)
 #spectrum(amd, 'high', aapl, 'high')
