@@ -20,10 +20,11 @@ class Name:
 class Stock(Name):
     def __init__(self, name):
         Name.__init__(self, name)
-        request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + name +
-                           '&outputsize=full&interval=1min&apikey=' + api_key)
-        response = urllib.request.urlopen(request)
-        data = json.load(response)
+        #request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + name +
+        #                   '&outputsize=full&interval=1min&apikey=' + api_key)
+        #response = urllib.request.urlopen(request)
+        #data = json.load(response)
+        data = json.load(open(str(name) + '.json'))
         prices = data['Time Series (Daily)']
         count = 0
         self.days = []
@@ -124,7 +125,7 @@ def fourier(*args):
     for arg in args:
         c += 1
     if c % 2 != 0:
-        print('must pass pairs of x,y data\n')
+        print('must pass stock and data label \nUse help() for more info')
         return -1
     counter = 0
     for arg in args:
@@ -153,9 +154,10 @@ def fourier(*args):
 aapl = Stock('aapl')
 amd = Stock('amd')
 msft = Stock('msft')
+#msft = Stock('msft')
 #correlation(aapl.close, aapl.high, amd.close)
 #percent_change(aapl.high, amd.low)
 #print(amd.per_ch)
-spectrum(amd, 'high', aapl, 'high', msft, 'volume')
+#spectrum(amd, 'high', aapl, 'high')
 #helpme()
 
