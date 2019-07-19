@@ -92,7 +92,7 @@ def spectrum(*args):
 
 
 def correlation(*args):
-    if len(args) % 2 == 0 or len(args) < 4:
+    if len(args) % 2 != 0 or len(args) < 4:
         print('Must pass at least two stocks and data labels \nUse help() for more info')
         return
     counter, tag, st, sts = 0, [], [], []
@@ -176,9 +176,16 @@ aapl = Stock('aapl')
 amd = Stock('amd')
 msft = Stock('msft')
 #msft = Stock('msft')
-#correlation(aapl,'high',amd, 'low')
+correlation(aapl,'high',amd, 'low')
 #percent_change(aapl.high, amd.low)
 #print(amd.per_ch)
-#spectrum(amd, 'high', aapl, 'high')
+spectrum(amd, 'high', aapl, 'high')
 #helpme()
 
+#things to add
+'''
+1) create ability to read a script file for loading a large amount of 
+stocks and performing a lot of analysis
+2) Create the option to read json data from the local machine or internet
+3) add bollinger bands and candle sticks to spectrum 
+'''
