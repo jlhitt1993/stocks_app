@@ -200,6 +200,7 @@ percent_change(aapl, "high", amd, "low", labels=["aapl.high", "amd.low"])
 #fourier(aapl, amd)
 #help()
 
+
 # things to add
 '''
 1) create ability to read a script file for loading a large amount of 
