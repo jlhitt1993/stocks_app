@@ -7,7 +7,11 @@ import urllib.request
 import time
 import matplotlib.pyplot as pl
 import plotly.graph_objects as go
+<<<<<<< HEAD:OO_stocks.py
 from scipy.fftpack import rfft
+=======
+from scipy.fftpack import fft
+>>>>>>> added candlesticks:OO stocks.py
 from pandas.plotting import register_matplotlib_converters
 
 register_matplotlib_converters()
