@@ -7,11 +7,7 @@ import urllib.request
 import time
 import matplotlib.pyplot as pl
 import plotly.graph_objects as go
-<<<<<<< HEAD:OO_stocks.py
 from scipy.fftpack import rfft
-=======
-from scipy.fftpack import fft
->>>>>>> added candlesticks:OO stocks.py
 from pandas.plotting import register_matplotlib_converters
 
 register_matplotlib_converters()
@@ -203,12 +199,7 @@ stocks and performing a lot of analysis
 2) Create the option to read json data from the local machine or internet
 3) add Bollinger bands and candle sticks to spectrum 
 4) create executable to share with others
-<<<<<<< HEAD:OO_stocks.py
 5) add anything interesting from atom finance
 6) create website and or document with detailed instructions
 7) The program needs to look for trends by analyzing the relationships between a large number of stocks
-=======
-5) add anything from atom finance
-6) create website and or document with detailed instructions
->>>>>>> added comments:OO stocks.py
 '''
