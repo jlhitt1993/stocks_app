@@ -1,15 +1,19 @@
 # Program that gets data from the stock market and performs analysis on it based on the users commands
-
+from _datetime import datetime as dt
 import numpy as np
 import pandas as pd
 import json
 import urllib.request
 import time
 import matplotlib.pyplot as pl
-from scipy.fftpack import fft
+import plotly.graph_objects as go
+from scipy.fftpack import rfft
+from pandas.plotting import register_matplotlib_converters
 
+register_matplotlib_converters()
 url = "https://www.alphavantage.co/query"
 api_key = 'BY1OVG40O9CEKQY4'
+#pd.plotting.register_matplotlib_converters()
 
 
 class Name:
@@ -33,6 +37,7 @@ class Stock(Name):
         self.close = []
         self.volume = []
         self.low = []
+        self.dates = []
         for d in prices:
             self.high.append(float(prices[d]['2. high']))   # t is tick, d is date. value is the keyword for the desired data
             self.low.append(float(prices[d]['3. low']))
@@ -40,6 +45,7 @@ class Stock(Name):
             self.close.append(float(prices[d]['4. close']))
             self.volume.append(float(prices[d]['5. volume']))
             self.days.append(count)   # count is number of days for each tick
+            self.dates.append(dt.strptime(d, '%Y-%m-%d'))
             count += 1
         print('Got: ' + name + '')
         time.sleep(0.5)
@@ -55,9 +61,8 @@ def stocks(*args):
 
 def help():
     print('Welcome to help.\nStart by getting data about a stock ex. aapl = Stock(\'aapl\')')
-    print('Afterwards, you can access data of daily high, low, open, close and volume by aapl.high')
     print('You can make plots by spectrum(aapl, \'high\', amd, \'high\'). Other plots are correlation(),'
-          'percent_change() and fourier()')
+          'percent_change(), candlestick and fourier()')
     print('For more help, see the documentation and examples at www.placeholder.com')
 
 
@@ -86,9 +91,15 @@ def spectrum(*args):
         if tag[i] == 'volume':
             sts.append(st[i].volume)
     for i in range(len(sts)):
-        pl.plot(st[i].days, sts[i], label=st[i].name + '-' + tag[i])
-    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=7)
+        pl.plot_date(st[i].dates, sts[i], xdate=True, label=st[i].name + '-' + tag[i])
+    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=6)
     pl.show()
+
+
+def candlestick(arg):
+    fig = go.Figure(data=[go.Candlestick(x=arg.dates, open=arg.open, high=arg.high, low=arg.low, close=arg.close)])
+    fig.update_layout(title=arg.name, yaxis_title='Price ($)')
+    fig.show()
 
 
 def correlation(*args):
@@ -123,14 +134,14 @@ def correlation(*args):
     pl.show()
 
 
-def percent_change(*args):
+def percent_change(*args, **kwargs):
     pc = [[]]
     for h in range(len(args)):
         for i in range(len(args[h])-1):
             pc[h].append((args[h][i+1]-args[h][i])/(args[h][i]))
         Stock.per_ch = pc[h]
         pl.subplot(len(args), 1, h + 1)
-        pl.scatter(args[h][:-1], pc[h], s=1, label=h)
+        pl.scatter(args[h][:-1], pc[h], s=1, label=kwargs["labels"][h])
         if h == 0:
             pl.title('Percent change', fontsize=30)
             pl.xlabel('day', fontsize=26)
@@ -142,28 +153,27 @@ def percent_change(*args):
 
 def fourier(*args):
     x, y, c = [], [], 0
-    for arg in args:
+    '''for arg in args:
         c += 1
     if c % 2 != 0:
         print('must pass stock and data label \nUse help() for more info')
-        return
+        return'''
     counter = 0
     for arg in args:
-        half = len(arg) // 2
-        if counter % 2 == 0:
-            x.append(arg)
-        if counter % 2 == 1:
-            if len(arg) % 2 == 0:
-                y.append(np.abs(fft(arg)[0:half]))
-            if len(arg) % 2 == 1:
-                y.append(np.abs(fft(arg)[0:half]))
+        half = len(arg.days) // 2
+        #if counter % 2 == 0:
+        x.append(arg.days)
+        if len(arg.days) % 2 == 0:
+            y.append(np.abs(rfft(arg.high)))
+        if len(arg.days) % 2 == 1:
+            y.append(np.abs(rfft(arg.high)))
         counter += 1
-    for i in range(c//2):
-        pl.plot(x[i][0:half], y[i])
+    for i in range(len(args)):
+        pl.plot(x[i], y[i])
     pl.xlabel('days', fontsize=26)
     pl.title('Fourier transform', fontsize=30)
     pl.ylabel('FT', fontsize=26)
-    pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
+    #pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     pl.show()
     return
 
@@ -175,17 +185,21 @@ def fourier(*args):
 aapl = Stock('aapl')
 amd = Stock('amd')
 msft = Stock('msft')
-#msft = Stock('msft')
-correlation(aapl,'high',amd, 'low')
-#percent_change(aapl.high, amd.low)
-#print(amd.per_ch)
-spectrum(amd, 'high', aapl, 'high')
-#helpme()
+#candlestick(amd)
+#correlation(aapl,'high',amd, 'low')
+#percent_change(aapl.high, amd.low, labels=["aapl.high", "amd.low"])
+#spectrum(amd, 'high')
+fourier(aapl, amd)
+#help()
 
-#things to add
+# things to add
 '''
 1) create ability to read a script file for loading a large amount of 
 stocks and performing a lot of analysis
 2) Create the option to read json data from the local machine or internet
-3) add bollinger bands and candle sticks to spectrum 
+3) add Bollinger bands and candle sticks to spectrum 
+4) create executable to share with others
+5) add anything interesting from atom finance
+6) create website and or document with detailed instructions
+7) The program needs to look for trends by analyzing the relationships between a large number of stocks
 '''
