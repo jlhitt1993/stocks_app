@@ -130,7 +130,6 @@ def correlation(*args):
     for i in range(len(sts)-1):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
-            print('Corrcoef: ', c)
             pl.figure(num='Correlation', figsize=(10, 9), dpi=80, facecolor='w', edgecolor='k')
             pl.scatter(sts[i], sts[ii], s=1, label=st[i].name + '-' + tag[i] + '/' + st[ii].name + '-' + tag[ii] +
                        str(c)[:6])
@@ -142,13 +141,15 @@ def correlation(*args):
 
 def percent_change(*args, **kwargs):
     pc = [[]]
+    dates = []
     for h in range(len(args)):
         for i in range(len(args[h])-1):
             pc[h].append((args[h][i+1]-args[h][i])/(args[h][i]))
+        dates.append(args[h].dates)
         Stock.per_ch = pc[h]
         pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
         pl.subplot(len(args), 1, h + 1)
-        pl.scatter(args[h][:-1], pc[h], s=1, label=kwargs["labels"][h])
+        pl.plot_date(dates[h], pc[h], s=1, label=kwargs["labels"][h])
         if h == 0:
             pl.title('Percent change', fontsize=28)
             pl.xlabel('day', fontsize=26)
@@ -189,13 +190,12 @@ def fourier(*args):
 #    print()
 
 
-
-#aapl = Stock('aapl')
-#amd = Stock('amd')
+aapl = Stock('aapl')
+amd = Stock('amd')
 #msft = Stock('msft')
 #candlestick(amd)
 #correlation(aapl,'high',amd, 'low')
-#percent_change(aapl.high, amd.low, labels=["aapl.high", "amd.low"])
+percent_change(aapl, "high", amd, "low", labels=["aapl.high", "amd.low"])
 #spectrum(amd, 'high')
 #fourier(aapl, amd)
 #help()
