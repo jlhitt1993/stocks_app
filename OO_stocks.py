@@ -128,9 +128,10 @@ def correlation(*args):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
             print('Corrcoef: ', c)
-            pl.scatter(sts[i], sts[ii], s=1, label=st[i].name + '-' + tag[i] + '/' + st[ii].name + '-' + tag[ii])
+            pl.scatter(sts[i], sts[ii], s=1, label=st[i].name + '-' + tag[i] + '/' + st[ii].name + '-' + tag[ii] +
+                       str(c)[:6])
     pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10, markerscale=7)
-    #legend.set_sizes([34])
+    # legend.set_sizes([34])
     pl.show()
 
 
@@ -182,14 +183,14 @@ def fourier(*args):
 
 
 
-aapl = Stock('aapl')
-amd = Stock('amd')
-msft = Stock('msft')
+#aapl = Stock('aapl')
+#amd = Stock('amd')
+#msft = Stock('msft')
 #candlestick(amd)
 #correlation(aapl,'high',amd, 'low')
 #percent_change(aapl.high, amd.low, labels=["aapl.high", "amd.low"])
 #spectrum(amd, 'high')
-fourier(aapl, amd)
+#fourier(aapl, amd)
 #help()
 
 # things to add
