@@ -9,6 +9,7 @@ import matplotlib.pyplot as pl
 import plotly.graph_objects as go
 from scipy.fftpack import rfft
 from pandas.plotting import register_matplotlib_converters
+from matplotlib.pyplot import figure
 
 register_matplotlib_converters()
 url = "https://www.alphavantage.co/query"
@@ -90,9 +91,11 @@ def spectrum(*args):
             sts.append(st[i].close)
         if tag[i] == 'volume':
             sts.append(st[i].volume)
+    pl.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(sts)):
         pl.plot_date(st[i].dates, sts[i], xdate=True, label=st[i].name + '-' + tag[i])
-    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=6)
+    pl.title("Spectrum", fontsize=28)
+    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=3)
     pl.show()
 
 
@@ -128,9 +131,11 @@ def correlation(*args):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
             print('Corrcoef: ', c)
+            pl.figure(num='Correlation', figsize=(10, 9), dpi=80, facecolor='w', edgecolor='k')
             pl.scatter(sts[i], sts[ii], s=1, label=st[i].name + '-' + tag[i] + '/' + st[ii].name + '-' + tag[ii] +
                        str(c)[:6])
-    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=10, markerscale=7)
+            pl.title("Correlation", fontsize=28)
+    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 17}, fontsize=7, markerscale=7)
     # legend.set_sizes([34])
     pl.show()
 
@@ -141,10 +146,11 @@ def percent_change(*args, **kwargs):
         for i in range(len(args[h])-1):
             pc[h].append((args[h][i+1]-args[h][i])/(args[h][i]))
         Stock.per_ch = pc[h]
+        pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
         pl.subplot(len(args), 1, h + 1)
         pl.scatter(args[h][:-1], pc[h], s=1, label=kwargs["labels"][h])
         if h == 0:
-            pl.title('Percent change', fontsize=30)
+            pl.title('Percent change', fontsize=28)
             pl.xlabel('day', fontsize=26)
         pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
         pl.ylabel('percent change', fontsize=26)
@@ -169,10 +175,11 @@ def fourier(*args):
         if len(arg.days) % 2 == 1:
             y.append(np.abs(rfft(arg.high)))
         counter += 1
+    pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(args)):
         pl.plot(x[i], y[i])
     pl.xlabel('days', fontsize=26)
-    pl.title('Fourier transform', fontsize=30)
+    pl.title('Fourier transform', fontsize=28)
     pl.ylabel('FT', fontsize=26)
     #pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     pl.show()
@@ -203,4 +210,5 @@ stocks and performing a lot of analysis
 5) add anything interesting from atom finance
 6) create website and or document with detailed instructions
 7) The program needs to look for trends by analyzing the relationships between a large number of stocks
+8) Be able to select a date range to consider
 '''
