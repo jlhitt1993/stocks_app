@@ -6,7 +6,7 @@ from OO_stocks import Stock, candlestick, correlation, percent_change, \
 aapl = Stock('aapl')
 amd = Stock('amd')
 msft = Stock('msft')
-# candlestick(amd)
+#candlestick(amd)
 correlation(aapl, 'high', amd, 'low')
 percent_change(aapl, amd, labels=["high", "low"])
 spectrum(amd, 'high', aapl, 'high')

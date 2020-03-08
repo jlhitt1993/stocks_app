@@ -97,6 +97,8 @@ def spectrum(*args):
         pl.plot_date(st[i].dates, sts[i], xdate=True, label=st[i].name + '-' + tag[i])
     pl.title("Spectrum", fontsize=28)
     pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=3)
+    mngr = pl.get_current_fig_manager()
+    mngr.window.geometry("1000x700+0+0")
     pl.show()
 
 
@@ -137,6 +139,8 @@ def correlation(*args):
             pl.title("Correlation", fontsize=28)
     pl.legend(loc='upper right', scatterpoints=1, prop={'size': 17}, fontsize=7, markerscale=7)
     # legend.set_sizes([34])
+    mngr = pl.get_current_fig_manager()
+    mngr.window.geometry("1000x700+0+0")
     pl.show()
 
 
@@ -173,6 +177,8 @@ def percent_change(*args, **kwargs):
         pl.ylabel('percent change', fontsize=26)
         ax.set_xlim([args[h].dates[1], args[h].dates[-1]])
         pc.append([])
+    mngr = pl.get_current_fig_manager()
+    mngr.window.geometry("1000x700+0+0")
     pl.show()
 
 
@@ -202,6 +208,8 @@ def fourier(*args, **kwargs):
     pl.ylabel('FT', fontsize=26)
     pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     ax.set_xlim(-10, 400)
+    mngr = pl.get_current_fig_manager()
+    mngr.window.geometry("1000x700+0+0")
     pl.show()
     return
 
@@ -209,14 +217,14 @@ def fourier(*args, **kwargs):
 #    print()
 
 
-aapl = Stock('aapl')
-amd = Stock('amd')
+#aapl = Stock('aapl')
+#amd = Stock('amd')
 #msft = Stock('msft')
 #candlestick(amd)
 #correlation(aapl,'high',amd, 'low')
 #percent_change(aapl, amd, labels=["high", "low"])
 #spectrum(amd, 'high')
-fourier(aapl, amd, labels=["high", "low"])
+#fourier(aapl, amd, labels=["high", "low"])
 #help()
 
 # things to add
