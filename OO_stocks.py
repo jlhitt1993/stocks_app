@@ -176,30 +176,32 @@ def percent_change(*args, **kwargs):
     pl.show()
 
 
-def fourier(*args):
-    x, y, c = [], [], 0
-    '''for arg in args:
-        c += 1
-    if c % 2 != 0:
-        print('must pass stock and data label \nUse help() for more info')
-        return'''
-    counter = 0
-    for arg in args:
-        half = len(arg.days) // 2
-        #if counter % 2 == 0:
-        x.append(arg.days)
-        if len(arg.days) % 2 == 0:
-            y.append(np.abs(rfft(arg.high)))
-        if len(arg.days) % 2 == 1:
-            y.append(np.abs(rfft(arg.high)))
-        counter += 1
-    pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
+def fourier(*args, **kwargs):
+    y = []
+    for h in range(len(args)):
+        y.append([])
+        if kwargs["labels"][h] == "high":
+            y[h].append(np.abs(rfft(args[h].high)))
+        elif kwargs["labels"][h] == "low":
+            y[h].append(np.abs(rfft(args[h].low)))
+        elif kwargs["labels"][h] == "close":
+            y[h].append(np.abs(rfft(args[h].close)))
+        elif kwargs["labels"][h] == "open":
+            y[h].append(np.abs(rfft(args[h].open)))
+        elif kwargs["labels"][h] == "volume":
+            y[h].append(np.abs(rfft(args[h].volume)))
+        else:
+            print("Invalid label argument")
+            return
+    fig = pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
+    ax = fig.add_subplot()
     for i in range(len(args)):
-        pl.plot(x[i], y[i])
+        pl.plot(args[i].days, np.transpose(y[i]), label=(args[i].name + '-' + kwargs['labels'][i]))
     pl.xlabel('days', fontsize=26)
     pl.title('Fourier transform', fontsize=28)
     pl.ylabel('FT', fontsize=26)
-    #pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
+    pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
+    ax.set_xlim(-10, 400)
     pl.show()
     return
 
@@ -212,9 +214,9 @@ amd = Stock('amd')
 #msft = Stock('msft')
 #candlestick(amd)
 #correlation(aapl,'high',amd, 'low')
-percent_change(aapl, amd, labels=["high", "low"])
+#percent_change(aapl, amd, labels=["high", "low"])
 #spectrum(amd, 'high')
-#fourier(aapl, amd)
+fourier(aapl, amd, labels=["high", "low"])
 #help()
 
 # things to add
