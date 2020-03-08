@@ -111,26 +111,21 @@ def correlation(**kwargs):
     if len(kwargs['stocks']) < 2:
         print('Must pass at least two stocks and data labels \nUse help() for more info')
         return
-    counter, tag, st, sts = 0, [], [], []
-    for arg in args:
-        if counter % 2 == 0:
-            st.append(arg)
-        if counter % 2 == 1:
-            tag.append(arg)
-        counter += 1
-    for i in range(len(st)):
-        if tag[i] == 'high':
-            sts.append(st[i].high)
-        elif tag[i] == 'low':
-            sts.append(st[i].low)
-        elif tag[i] == 'open':
-            sts.append(st[i].open)
-        elif tag[i] == 'close':
-            sts.append(st[i].close)
-        elif tag[i] == 'volume':
-            sts.append(st[i].volume)
+    sts = []
+    for i in range(len(kwargs['stocks'])):
+        if kwargs['labels'][i] == 'high':
+            sts.append(kwargs['stocks'][i].high)
+        elif kwargs['labels'][i] == 'low':
+            sts.append(kwargs['stocks'][i].low)
+        elif kwargs['labels'][i] == 'open':
+            sts.append(kwargs['stocks'][i].open)
+        elif kwargs['labels'][i] == 'close':
+            sts.append(kwargs['stocks'][i].close)
+        elif kwargs['labels'][i] == 'volume':
+            sts.append(kwargs['stocks'][i].volume)
         else:
-            print("Invalid string argument for" + arg[i].name)
+            print("invalid label for " + kwargs['stocks'][i].name)
+            return
     for i in range(len(sts)-1):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
@@ -145,7 +140,7 @@ def correlation(**kwargs):
     pl.show()
 
 
-def percent_change(*args, **kwargs):
+def percent_change(**kwargs):
     check = check_length(kwargs['stocks'], kwargs['labels'])
     if not check:
         return
