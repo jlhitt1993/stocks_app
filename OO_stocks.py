@@ -1,5 +1,6 @@
 # Program that gets data from the stock market and performs analysis on it based on the users commands
 from _datetime import datetime as dt
+import datetime
 import numpy as np
 import pandas as pd
 import json
@@ -40,7 +41,7 @@ class Stock(Name):
         self.low = []
         self.dates = []
         for d in prices:
-            self.high.append(float(prices[d]['2. high']))   # t is tick, d is date. value is the keyword for the desired data
+            self.high.append(float(prices[d]['2. high']))   #d is date. value is the keyword for the desired data
             self.low.append(float(prices[d]['3. low']))
             self.open.append(float(prices[d]['1. open']))
             self.close.append(float(prices[d]['4. close']))
@@ -143,18 +144,34 @@ def percent_change(*args, **kwargs):
     pc = [[]]
     dates = []
     for h in range(len(args)):
-        for i in range(len(args[h])-1):
-            pc[h].append((args[h][i+1]-args[h][i])/(args[h][i]))
+        if kwargs["labels"][h] == "high":
+            for i in range(len(args[h].high)-1):
+                pc[h].append((args[h].high[i+1]-args[h].high[i])/(args[h].high[i]))
+        elif kwargs["labels"][h] == "low":
+            for i in range(len(args[h].low)-1):
+                pc[h].append((args[h].low[i+1]-args[h].low[i])/(args[h].low[i]))
+        elif kwargs["labels"][h] == "close":
+            for i in range(len(args[h].high)-1):
+                pc[h].append((args[h].close[i+1]-args[h].close[i])/(args[h].close[i]))
+        elif kwargs["labels"][h] == "open":
+            for i in range(len(args[h].high)-1):
+                pc[h].append((args[h].open[i+1]-args[h].open[i])/(args[h].open[i]))
+        elif kwargs["labels"][h] == "volume":
+            for i in range(len(args[h].high)-1):
+                pc[h].append((args[h].volume[i+1]-args[h].volume[i])/(args[h].volume[i]))
+        else:
+            print("Invalid label argument")
+            return
         dates.append(args[h].dates)
-        Stock.per_ch = pc[h]
-        pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
-        pl.subplot(len(args), 1, h + 1)
-        pl.plot_date(dates[h], pc[h], s=1, label=kwargs["labels"][h])
+        fig = pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
+        ax = fig.add_subplot(len(args), 1, h + 1)
+        pl.plot_date(dates[h][1:], pc[h], markersize=2, label=(args[h].name + '-' + kwargs["labels"][h]))
         if h == 0:
             pl.title('Percent change', fontsize=28)
-            pl.xlabel('day', fontsize=26)
-        pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
+        pl.xlabel('day', fontsize=26)
+        pl.legend(loc='upper right', prop={'size': 16}, markerscale=4)
         pl.ylabel('percent change', fontsize=26)
+        ax.set_xlim([args[h].dates[1], args[h].dates[-1]])
         pc.append([])
     pl.show()
 
@@ -195,7 +212,7 @@ amd = Stock('amd')
 #msft = Stock('msft')
 #candlestick(amd)
 #correlation(aapl,'high',amd, 'low')
-percent_change(aapl, "high", amd, "low", labels=["aapl.high", "amd.low"])
+percent_change(aapl, amd, labels=["high", "low"])
 #spectrum(amd, 'high')
 #fourier(aapl, amd)
 #help()
