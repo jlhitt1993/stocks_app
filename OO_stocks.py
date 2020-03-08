@@ -68,33 +68,29 @@ def help():
     print('For more help, see the documentation and examples at www.placeholder.com')
 
 
-def spectrum(*args):
-    sts, st, tag = [], [], []
-    c = len(args)
-    if c % 2 != 0:
-        print('must pass a stock with the legend label after \nUse help() for more info')
+def spectrum(**kwargs):
+    sts = []
+    if (len(kwargs['stocks']) != (len(kwargs['labels']))):
+        print("List of stocks does not match list of labels")
         return
-    counter = 0
-    for arg in args:
-        if counter % 2 == 0:
-            st.append(arg)
-        if counter % 2 == 1:
-            tag.append(arg)
-        counter += 1
-    for i in range(len(st)):
-        if tag[i] == 'high':
-            sts.append(st[i].high)
-        if tag[i] == 'low':
-            sts.append(st[i].low)
-        if tag[i] == 'open':
-            sts.append(st[i].open)
-        if tag[i] == 'close':
-            sts.append(st[i].close)
-        if tag[i] == 'volume':
-            sts.append(st[i].volume)
+    for i in range(len(kwargs['stocks'])):
+        if kwargs['labels'][i] == 'high':
+            sts.append(kwargs['stocks'][i].high)
+        elif kwargs['labels'][i] == 'low':
+            sts.append(kwargs['stocks'][i].low)
+        elif kwargs['labels'][i] == 'open':
+            sts.append(kwargs['stocks'][i].open)
+        elif kwargs['labels'][i] == 'close':
+            sts.append(kwargs['stocks'][i].close)
+        elif kwargs['labels'][i] == 'volume':
+            sts.append(kwargs['stocks'][i].volume)
+        else:
+            print("invalid label for " + kwargs['stocks'][i].name)
+            return
     pl.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    for i in range(len(sts)):
-        pl.plot_date(st[i].dates, sts[i], xdate=True, label=st[i].name + '-' + tag[i])
+    for i in range(len(kwargs['stocks'])):
+        pl.plot_date(kwargs['stocks'][i].dates, sts[i], xdate=True,
+                     label=(kwargs['stocks'][i].name + '-' + kwargs['labels'][i]))
     pl.title("Spectrum", fontsize=28)
     pl.legend(loc='upper right', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=3)
     mngr = pl.get_current_fig_manager()
@@ -108,7 +104,7 @@ def candlestick(arg):
     fig.show()
 
 
-def correlation(*args):
+def correlation(**kwargs):
     if len(args) % 2 != 0 or len(args) < 4:
         print('Must pass at least two stocks and data labels \nUse help() for more info')
         return
@@ -122,14 +118,16 @@ def correlation(*args):
     for i in range(len(st)):
         if tag[i] == 'high':
             sts.append(st[i].high)
-        if tag[i] == 'low':
+        elif tag[i] == 'low':
             sts.append(st[i].low)
-        if tag[i] == 'open':
+        elif tag[i] == 'open':
             sts.append(st[i].open)
-        if tag[i] == 'close':
+        elif tag[i] == 'close':
             sts.append(st[i].close)
-        if tag[i] == 'volume':
+        elif tag[i] == 'volume':
             sts.append(st[i].volume)
+        else:
+            print("Invalid string argument for" + arg[i].name)
     for i in range(len(sts)-1):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
@@ -217,13 +215,13 @@ def fourier(*args, **kwargs):
 #    print()
 
 
-#aapl = Stock('aapl')
-#amd = Stock('amd')
+aapl = Stock('aapl')
+amd = Stock('amd')
 #msft = Stock('msft')
 #candlestick(amd)
-#correlation(aapl,'high',amd, 'low')
+correlation(stocks=[aapl, amd], labels=['low', 'low'])
 #percent_change(aapl, amd, labels=["high", "low"])
-#spectrum(amd, 'high')
+#spectrum(stocks=[amd, aapl], labels=['high', 'high'])
 #fourier(aapl, amd, labels=["high", "low"])
 #help()
 
