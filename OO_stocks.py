@@ -53,14 +53,6 @@ class Stock(Name):
         time.sleep(0.5)
 
 
-Stocks = {}
-
-
-def stocks(*args):
-    for arg in args:
-        Stocks[arg] = Stock(arg)
-
-
 def help():
     print('Welcome to help.\nStart by getting data about a stock ex. aapl = Stock(\'aapl\')')
     print('You can make plots by spectrum(aapl, \'high\', amd, \'high\'). Other plots are correlation(),'
@@ -68,10 +60,18 @@ def help():
     print('For more help, see the documentation and examples at www.placeholder.com')
 
 
+def check_length(stocks, labels):
+    if (len(stocks) != (len(labels))):
+        print("List of stocks does not match list of labels")
+        return False
+    else:
+        return True
+
+
 def spectrum(**kwargs):
     sts = []
-    if (len(kwargs['stocks']) != (len(kwargs['labels']))):
-        print("List of stocks does not match list of labels")
+    check = check_length(kwargs['stocks'], kwargs['labels'])
+    if not check:
         return
     for i in range(len(kwargs['stocks'])):
         if kwargs['labels'][i] == 'high':
@@ -105,7 +105,10 @@ def candlestick(arg):
 
 
 def correlation(**kwargs):
-    if len(args) % 2 != 0 or len(args) < 4:
+    check = check_length(kwargs['stocks'], kwargs['labels'])
+    if not check:
+        return
+    if len(kwargs['stocks']) < 2:
         print('Must pass at least two stocks and data labels \nUse help() for more info')
         return
     counter, tag, st, sts = 0, [], [], []
@@ -143,6 +146,9 @@ def correlation(**kwargs):
 
 
 def percent_change(*args, **kwargs):
+    check = check_length(kwargs['stocks'], kwargs['labels'])
+    if not check:
+        return
     pc = [[]]
     dates = []
     for h in range(len(args)):
@@ -181,6 +187,9 @@ def percent_change(*args, **kwargs):
 
 
 def fourier(*args, **kwargs):
+    check = check_length(kwargs['stocks'], kwargs['labels'])
+    if not check:
+        return
     y = []
     for h in range(len(args)):
         y.append([])
@@ -220,9 +229,9 @@ amd = Stock('amd')
 #msft = Stock('msft')
 #candlestick(amd)
 correlation(stocks=[aapl, amd], labels=['low', 'low'])
-#percent_change(aapl, amd, labels=["high", "low"])
+#percent_change(stocks=[aapl, amd], labels=["high", "low"])
 #spectrum(stocks=[amd, aapl], labels=['high', 'high'])
-#fourier(aapl, amd, labels=["high", "low"])
+#fourier(stocks=[aapl, amd], labels=["high", "low"])
 #help()
 
 # things to add
