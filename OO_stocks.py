@@ -232,7 +232,7 @@ def fourier(**kwargs):
 #msft = Stock('msft')
 #candlestick(amd)
 #correlation(stocks=[aapl, amd], labels=['low', 'low'])
-#percent_change(stocks=[aapl, amd], labels=["high", "low"])
+#percent_change(stocks=[aapl], labels=["high"])
 #spectrum(stocks=[amd, aapl], labels=['high', 'high'])
 #fourier(stocks=[aapl, amd], labels=["high", "low"])
 #help()
