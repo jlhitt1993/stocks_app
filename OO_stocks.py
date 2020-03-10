@@ -22,13 +22,15 @@ class Name:
 
 
 class Stock(Name):
-    def __init__(self, name):
+    def __init__(self, name, **kwargs):
         Name.__init__(self, name)
-        #request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + name +
-        #                   '&outputsize=full&interval=1min&apikey=' + api_key)
-        #response = urllib.request.urlopen(request)
-        #data = json.load(response)
-        data = json.load(open(str(name) + '.json'))
+        if 'local' in kwargs.keys():
+            data = json.load(open(kwargs['local'] + name + '.json'))
+        else:
+            request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + name +
+                                             '&outputsize=full&interval=1min&apikey=' + api_key)
+            response = urllib.request.urlopen(request)
+            data = json.load(response)
         prices = data['Time Series (Daily)']
         count = 0
         self.days = []
@@ -239,7 +241,6 @@ def fourier(**kwargs):
 '''
 1) create ability to read a script file for loading a large amount of 
 stocks and performing a lot of analysis
-2) Create the option to read json data from the local machine or internet
 3) add Bollinger bands and candle sticks to spectrum 
 4) create executable to share with others
 5) add anything interesting from atom finance
