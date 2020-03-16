@@ -221,7 +221,8 @@ def fourier(**kwargs):
     pl.show()
     return
 
-
+if __name__ == '__main__':
+    print("Start by creating stock objects like aapl = Stock('aapl') \n")
 #def scaled():
 #    print()
 
