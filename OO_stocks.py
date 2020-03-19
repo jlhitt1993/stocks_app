@@ -223,8 +223,6 @@ def fourier(**kwargs):
 
 if __name__ == '__main__':
     print("Start by creating stock objects like aapl = Stock('aapl') \n")
-#def scaled():
-#    print()
 
 
 ' For testing functions '
@@ -240,12 +238,10 @@ if __name__ == '__main__':
 
 # things to add
 '''
-1) create ability to read a script file for loading a large amount of 
+1) create ability to read a batch file for loading a large amount of 
 stocks and performing a lot of analysis
 3) add Bollinger bands and candle sticks to spectrum 
-4) create executable to share with others
-5) add anything interesting from atom finance
-6) create website and or document with detailed instructions
-7) The program needs to look for trends by analyzing the relationships between a large number of stocks
-8) Be able to select a date range to consider
+4) add anything interesting from atom finance
+5) create website and or document with detailed instructions
+6) Be able to select a date range to consider
 '''
