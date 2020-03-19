@@ -17,8 +17,8 @@ _______________
 
 #### Loading data
 
-- To get data about AAPL, type `aapl = Stock('aapl')`. This will create
-a stock object called `aapl`.
+- To get data about AAPL, type `AAPL = Stock('aapl')`. This will create
+a stock object called `AAPL`.
 - Stock objects have eight attributes: name, high, low, open, close,
     dates, days, volume.
     - `name` is a string of the stock's ticker symbol.

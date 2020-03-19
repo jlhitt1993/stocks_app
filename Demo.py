@@ -3,12 +3,12 @@
 from OO_stocks import Stock, candlestick, correlation, percent_change, \
     fourier, spectrum, help
 
-aapl = Stock('aapl', local='')
-amd = Stock('amd', local='')
-msft = Stock('msft', local='')
-candlestick(amd)
-correlation(stocks=[aapl, amd, msft], labels=['high', 'low', 'open'])
-percent_change(stocks=[aapl, amd, msft], labels=['high', 'low', 'open'])
-spectrum(stocks=[aapl, amd, msft], labels=['high', 'low', 'open'])
-fourier(stocks=[aapl, amd, msft], labels=['high', 'low', 'open'])
+AAPL = Stock('aapl')
+AMD = Stock('amd')
+MSFT = Stock('msft')
+#candlestick(AMD)
+correlation(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
+percent_change(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
+spectrum(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
+fourier(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
 # help()
