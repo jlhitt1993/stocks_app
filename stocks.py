@@ -2,7 +2,7 @@
 """
 Created on Wed Dec 13 14:47:00 2017
 
-@author: Jeremy
+@author: Jeremy Hitt
 """
 
 import urllib.request
