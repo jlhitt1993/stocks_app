@@ -8,7 +8,6 @@ import matplotlib.pyplot as pl
 import plotly.graph_objects as go
 from scipy.fftpack import rfft
 from pandas.plotting import register_matplotlib_converters
-from matplotlib.pyplot import figure
 
 register_matplotlib_converters()
 url = "https://www.alphavantage.co/query"
@@ -87,14 +86,13 @@ def spectrum(**kwargs):
         else:
             print("invalid label for " + kwargs['stocks'][i].name)
             return
-    pl.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
+    fig1 = pl.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(kwargs['stocks'])):
         pl.plot_date(kwargs['stocks'][i].dates, sts[i], xdate=True,
                      label=(kwargs['stocks'][i].name + '-' + kwargs['labels'][i]))
     pl.title("Spectrum", fontsize=28)
     pl.legend(loc='upper left', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=3)
-    mngr = pl.get_current_fig_manager()
-    mngr.window.geometry("1000x700+0+0")
+    #fig1.canvas.manager.window.move(0, 0)
     pl.show()
 
 
@@ -126,17 +124,16 @@ def correlation(**kwargs):
         else:
             print("invalid label for " + kwargs['stocks'][i].name)
             return
+    fig2 = pl.figure(num='Correlation', figsize=(10, 9), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(sts)-1):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
-            pl.figure(num='Correlation', figsize=(10, 9), dpi=80, facecolor='w', edgecolor='k')
             pl.scatter(sts[i], sts[ii], s=1, label=kwargs['stocks'][i].name + '-' + kwargs['labels'][i] + '/' +
                        kwargs['stocks'][ii].name + '-' + kwargs['labels'][ii] + ' ' + str(c)[:6])
             pl.title("Correlation", fontsize=28)
     pl.legend(loc='upper right', scatterpoints=1, prop={'size': 17}, fontsize=7, markerscale=7)
     # legend.set_sizes([34])
-    mngr = pl.get_current_fig_manager()
-    mngr.window.geometry("1000x700+0+0")
+    #fig2.canvas.manager.window.move(0, 0)
     pl.show()
 
 
@@ -171,7 +168,7 @@ def percent_change(**kwargs):
             print("Invalid label argument")
             return
         dates.append(kwargs['stocks'][h].dates)
-        fig = pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
+        fig3 = pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
         ax = fig.add_subplot(len(kwargs['stocks']), 1, h + 1)
         pl.plot_date(dates[h][1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' + kwargs["labels"][h]))
         if h == 0:
@@ -181,8 +178,7 @@ def percent_change(**kwargs):
         ax.set_xlim([kwargs['stocks'][h].dates[1], kwargs['stocks'][h].dates[-1]])
         pc.append([])
     pl.xlabel('day', fontsize=26)
-    mngr = pl.get_current_fig_manager()
-    mngr.window.geometry("1000x700+0+0")
+    #fig3.canvas.manager.window.move(0, 0)
     pl.show()
 
 
@@ -206,7 +202,7 @@ def fourier(**kwargs):
         else:
             print("Invalid label argument")
             return
-    fig = pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
+    fig4 = pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     ax = fig.add_subplot()
     for i in range(len(kwargs['stocks'])):
         pl.plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
@@ -216,8 +212,7 @@ def fourier(**kwargs):
     pl.ylabel('FT', fontsize=26)
     pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     ax.set_xlim(-10, 400)
-    mngr = pl.get_current_fig_manager()
-    mngr.window.geometry("1000x700+0+0")
+    #fig4.canvas.manager.window.move(0, 0)
     pl.show()
     return
 
