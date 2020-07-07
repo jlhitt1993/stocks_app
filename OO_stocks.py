@@ -169,7 +169,7 @@ def percent_change(**kwargs):
             return
         dates.append(kwargs['stocks'][h].dates)
         fig3 = pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
-        ax = fig.add_subplot(len(kwargs['stocks']), 1, h + 1)
+        ax = fig3.add_subplot(len(kwargs['stocks']), 1, h + 1)
         pl.plot_date(dates[h][1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' + kwargs["labels"][h]))
         if h == 0:
             pl.title('Percent change', fontsize=28)
@@ -203,7 +203,7 @@ def fourier(**kwargs):
             print("Invalid label argument")
             return
     fig4 = pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    ax = fig.add_subplot()
+    ax = fig4.add_subplot()
     for i in range(len(kwargs['stocks'])):
         pl.plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
                                                                      '-' + kwargs['labels'][i]))
