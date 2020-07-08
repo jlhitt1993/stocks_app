@@ -1,3 +1,4 @@
+Yunxin Wang
 # Stocks App
 
 This API can easily fetch data about the stock market and create
