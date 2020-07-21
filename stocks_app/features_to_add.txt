@@ -1,0 +1,7 @@
+# things to add
+
+1) create ability to read a batch file for loading a large amount of
+stocks and performing a lot of analysis
+3) add Bollinger bands and candle sticks to spectrum
+5) create website and or document with detailed instructions
+6) Be able to select a date range to consider

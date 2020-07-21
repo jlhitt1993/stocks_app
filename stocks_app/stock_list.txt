@@ -1,0 +1,3 @@
+aapl
+amd
+msft

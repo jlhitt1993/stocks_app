@@ -12,7 +12,6 @@ from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 url = "https://www.alphavantage.co/query"
 api_key = 'BY1OVG40O9CEKQY4'
-#pd.plotting.register_matplotlib_converters()
 
 
 class Name:
@@ -230,13 +229,3 @@ if __name__ == '__main__':
 #spectrum(stocks=[amd, aapl], labels=['high', 'high'])
 #fourier(stocks=[aapl, amd], labels=["high", "low"])
 #help()
-
-# things to add
-'''
-1) create ability to read a batch file for loading a large amount of 
-stocks and performing a lot of analysis
-3) add Bollinger bands and candle sticks to spectrum 
-4) add anything interesting from atom finance
-5) create website and or document with detailed instructions
-6) Be able to select a date range to consider
-'''
