@@ -1,6 +1,7 @@
 .idea/*
 venv/*
 __pycache__/*
+stocks_app/__pycache__/*
 stocks_app.egg-info/*
 build/*
 dist/*
