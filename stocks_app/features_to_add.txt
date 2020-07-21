@@ -6,3 +6,4 @@ stocks and performing a lot of analysis
 5) create website and or document with detailed instructions
 6) Be able to select a date range to consider
 7) Be able to read jsons from any drive
+8) Unit tests

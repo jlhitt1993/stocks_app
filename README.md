@@ -49,3 +49,10 @@ format as is used by www.alphavantage.com. <br> An example json is also
 included in this package directory.
     - To load a local file, add the path to the file as shown 
 `AAPL = Stocks('aapl', local='C://path_to_file')`
+
+### Analyzing a large set of stocks
+
+A list of stocks can be provided in stock_list.txt to be downloaded and analyzed later.
+- Fill in the list in stock_list.txt and save the file. 
+- Run read_stock_list.py and choose the directory to save the json files.
+- Use the `local` argument in `Stock()` to import the json data from the local files.
