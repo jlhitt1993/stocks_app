@@ -1,3 +1,5 @@
+# Downloads data for one or more stocks and saves it locally
+
 import urllib.request
 import json
 import tkinter as tk
@@ -25,4 +27,4 @@ def save_json(args):
     root.destroy()
 
 if __name__ == '__main__':
-    save_json('aapl')
+    save_json(['aapl'])

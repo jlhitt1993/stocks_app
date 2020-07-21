@@ -1,6 +1,7 @@
-# Demo to show all the possible graphs in OO_stocks
+# Demo to show all the graphs possible in stocks_app
 
-from stock_objects import Stock, correlation, percent_change, fourier, spectrum
+from stock_objects import Stock
+from stock_plots import correlation, percent_change, fourier, spectrum, candlestick
 
 AAPL = Stock('aapl', local="C:/Users/Jeremy/stocks_app/stocks_app/")
 AMD = Stock('amd', local="C:/Users/Jeremy/stocks_app/stocks_app/")
