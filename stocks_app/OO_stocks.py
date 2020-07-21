@@ -48,7 +48,7 @@ class Stock(Name):
             self.dates.append(dt.strptime(d, '%Y-%m-%d'))
             count += 1
         print('Got: ' + name + '')
-        time.sleep(0.5)
+        time.sleep(0.4)
 
 
 def help():

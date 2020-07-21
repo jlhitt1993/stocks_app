@@ -1,3 +1,4 @@
 aapl
 amd
 msft
+lmt
