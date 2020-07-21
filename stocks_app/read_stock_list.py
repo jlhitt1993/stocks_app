@@ -5,7 +5,5 @@ with open("stock_list.txt", 'r') as read:
 print(stocks_list)
 stock_objects = []
 i = 0
-for stock in stocks_list:
-    save_json(stock)
-    i += 1
+save_json(stocks_list)
 print('Stocks were saved to directory')

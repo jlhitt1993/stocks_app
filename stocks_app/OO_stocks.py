@@ -1,13 +1,15 @@
 # Program that gets data from the stock market and performs analysis on it based on the users commands
 from _datetime import datetime as dt
 import numpy as np
-import json
+from json import dump, load
 import urllib.request
-import time
+from time import sleep
 import matplotlib.pyplot as pl
 import plotly.graph_objects as go
 from scipy.fftpack import rfft
 from pandas.plotting import register_matplotlib_converters
+import tkinter as tk
+from tkinter import filedialog
 
 register_matplotlib_converters()
 url = "https://www.alphavantage.co/query"
@@ -23,12 +25,15 @@ class Stock(Name):
     def __init__(self, name, **kwargs):
         Name.__init__(self, name)
         if 'local' in kwargs.keys():
-            data = json.load(open(kwargs['local'] + name + '.json'))
+            root = tk.Tk()
+            root.withdraw()
+            file_path = filedialog.askdirectory()
+            data = load(open(file_path + '/' + name + '.json'))
         else:
             request = urllib.request.Request(url + '?function=TIME_SERIES_DAILY&symbol=' + name +
                                              '&outputsize=full&interval=1min&apikey=' + api_key)
             response = urllib.request.urlopen(request)
-            data = json.load(response)
+            data = load(response)
         prices = data['Time Series (Daily)']
         count = 0
         self.days = []
@@ -48,7 +53,7 @@ class Stock(Name):
             self.dates.append(dt.strptime(d, '%Y-%m-%d'))
             count += 1
         print('Got: ' + name + '')
-        time.sleep(0.4)
+        sleep(0.4)
 
 
 def help():
