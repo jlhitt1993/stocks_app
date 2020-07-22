@@ -1,0 +1,22 @@
+{% setup_py = load_setup_py_data() %}
+
+package:
+  name: 'stocks_app'
+  version: {{ setup_py.get('version') }}
+
+source:
+  path: ./
+
+build: setup_py = load_setup_py_data() %}
+
+requirements:
+  run:
+    # Packages that must be installed
+
+  build:
+    # Packages used by setup.py to install
+
+about:
+  license: {{ setup_py.get('license') }}
+  license_file: LICENSE
+  summary: {{ setup_py.get('description') }}

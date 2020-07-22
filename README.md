@@ -8,6 +8,9 @@ https://www.alphavantage.co/query and is subject to their restrictions.
 
 ### Getting started
 
+Install stocks_app package from a repository such as https://github.com/jlhitt1993/stocks_app,
+PyPI, or Anaconda Cloud.
+
 To see examples, run `Demo.py`.
 
 Using `help()` can also help with getting started and troubleshooting.
