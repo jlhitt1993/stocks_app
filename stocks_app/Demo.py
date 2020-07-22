@@ -3,10 +3,10 @@
 from stock_objects import Stock
 from stock_plots import correlation, percent_change, fourier, spectrum, candlestick
 
-AAPL = Stock('aapl', local="C:/Users/Jeremy/stocks_app/stocks_app/")
-AMD = Stock('amd', local="C:/Users/Jeremy/stocks_app/stocks_app/")
-MSFT = Stock('msft', local="C:/Users/Jeremy/stocks_app/stocks_app/")
-LMT = Stock('lmt', local="C:/Users/Jeremy/stocks_app/stocks_app/")
+AAPL = Stock('aapl', local=True)
+AMD = Stock('amd', local=True)
+MSFT = Stock('msft', local=True)
+LMT = Stock('lmt', local=True)
 #candlestick(AMD)
 correlation(stocks=[AAPL, AMD, MSFT, LMT], labels=['high', 'low', 'open', 'open'])
 percent_change(stocks=[AAPL, AMD, MSFT, LMT], labels=['high', 'low', 'open', 'open'])

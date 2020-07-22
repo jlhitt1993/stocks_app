@@ -47,8 +47,8 @@ It's possible to analyze market data stored on local files.
 - To load data from local files, it must be stored in the same json 
 format as is used by www.alphavantage.com. <br> An example json is also 
 included in this package directory.
-    - To load a local file, add the path to the file as shown 
-`AAPL = Stocks('aapl', local='C://path_to_file')`
+    - To load a local file, set the keyword argument `local` to True as shown 
+`AAPL = Stocks('aapl', local=True)`
 
 ### Analyzing a large set of stocks
 
