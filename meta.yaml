@@ -7,14 +7,24 @@ package:
 source:
   path: ./
 
-build: setup_py = load_setup_py_data() %}
+build:
+    script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
   run:
-    # Packages that must be installed
+    - python >= 3.0
+    - numpy
+    - matplotlib
+    - plotly
+    - scipy
+    - pandas
+    - json
+    - urllib
+    - tkinter
 
   build:
-    # Packages used by setup.py to install
+    - python >= 3.0
+    - setuptools
 
 about:
   license: {{ setup_py.get('license') }}

@@ -45,9 +45,9 @@ def spectrum(**kwargs):
     fig1 = pl.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(kwargs['stocks'])):
         pl.plot_date(kwargs['stocks'][i].dates, sts[i], xdate=True,
-                     label=(kwargs['stocks'][i].name + '-' + kwargs['labels'][i]))
+                     label=(kwargs['stocks'][i].name + '-' + kwargs['labels'][i]), markersize=0.7)
     pl.title("Spectrum", fontsize=28)
-    pl.legend(loc='upper left', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=3)
+    pl.legend(loc='upper left', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=7)
     #fig1.canvas.manager.window.move(0, 0)
     pl.show()
 
@@ -162,7 +162,7 @@ def fourier(**kwargs):
     ax = fig4.add_subplot()
     for i in range(len(kwargs['stocks'])):
         pl.plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
-                                                                     '-' + kwargs['labels'][i]))
+                '-' + kwargs['labels'][i]))
     pl.xlabel('days', fontsize=26)
     pl.title('Fourier transform', fontsize=28)
     pl.ylabel('FT', fontsize=26)
