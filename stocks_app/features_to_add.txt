@@ -9,3 +9,4 @@ stocks and performing a lot of analysis
 8) Unit tests
 9) Add GUI
 10) Add docstrings to describe classes and functions
+11) 
