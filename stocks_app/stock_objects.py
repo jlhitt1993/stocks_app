@@ -20,7 +20,10 @@ class Name:
 class Stock(Name):
     def __init__(self, name, **kwargs):
         Name.__init__(self, name)
-        if 'local' in kwargs.keys():
+        if 'file' in kwargs.keys():
+            file_path = kwargs['file']
+            data = load(open(file_path + '/' + name + '.json'))
+        elif 'local' in kwargs.keys():
             root = tk.Tk()
             root.withdraw()
             file_path = filedialog.askdirectory()

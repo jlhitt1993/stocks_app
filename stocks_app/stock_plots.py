@@ -5,6 +5,7 @@ import matplotlib.pyplot as pl
 import plotly.graph_objects as go
 from scipy.fftpack import rfft
 from pandas.plotting import register_matplotlib_converters
+from analysis import get_fourier_peaks
 
 register_matplotlib_converters()
 
@@ -159,14 +160,20 @@ def fourier(**kwargs):
             print("Invalid label argument")
             return
     fig4 = pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    ax = fig4.add_subplot()
+    ax = fig4.add_subplot(111)
     for i in range(len(kwargs['stocks'])):
-        pl.plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
-                '-' + kwargs['labels'][i]))
-    pl.xlabel('days', fontsize=26)
-    pl.title('Fourier transform', fontsize=28)
-    pl.ylabel('FT', fontsize=26)
-    pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
+        plot = pl.plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
+                                                                            '-' + kwargs['labels'][i]))
+    peaks, properties = [], []
+    for i in range(len(kwargs['stocks'])):
+        peaks.append([])
+        properties.append([])
+        y_arr = np.transpose(np.array(y[i])[0, :])
+        peaks[i], properties[i], new_fig, new_ax = get_fourier_peaks(y_arr)
+    plot = pl.xlabel('days', fontsize=26)
+    plot = pl.title('Fourier transform', fontsize=28)
+    plot = pl.ylabel('FT', fontsize=26)
+    plot = pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     ax.set_xlim(-10, 400)
     #fig4.canvas.manager.window.move(0, 0)
     pl.show()
