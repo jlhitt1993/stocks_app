@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as pl
 import plotly.graph_objects as go
-from scipy.fftpack import rfft
+from scipy.fftpack import rfft, fftfreq
 from pandas.plotting import register_matplotlib_converters
 from analysis import get_fourier_peaks
 
@@ -143,39 +143,47 @@ def fourier(**kwargs):
     check = check_length(kwargs['stocks'], kwargs['labels'])
     if not check:
         return
-    y = []
+    y, freq = [], []
     for h in range(len(kwargs['stocks'])):
-        y.append([])
+        y.append(np.empty(len(kwargs['stocks'][h].days)))
+        freq.append(np.empty(len(kwargs['stocks'][h].days)))
         if kwargs["labels"][h] == "high":
-            y[h].append(np.abs(rfft(kwargs['stocks'][h].high)))
+            y[h] = np.abs(rfft(kwargs['stocks'][h].high))
+            freq[h] = fftfreq(len(kwargs['stocks'][h].high), 1)
         elif kwargs["labels"][h] == "low":
-            y[h].append(np.abs(rfft(kwargs['stocks'][h].low)))
+            y[h] = np.abs(rfft(kwargs['stocks'][h].low))
+            freq[h] = fftfreq(len(kwargs['stocks'][h].days), 1)
         elif kwargs["labels"][h] == "close":
-            y[h].append(np.abs(rfft(kwargs['stocks'][h].close)))
+            y[h] = np.abs(rfft(kwargs['stocks'][h].close))
+            freq[h] = fftfreq(len(kwargs['stocks'][h].days), 1)
         elif kwargs["labels"][h] == "open":
-            y[h].append(np.abs(rfft(kwargs['stocks'][h].open)))
+            y[h] = np.abs(rfft(kwargs['stocks'][h].open))
+            freq[h] = fftfreq(len(kwargs['stocks'][h].days), 1)
         elif kwargs["labels"][h] == "volume":
-            y[h].append(np.abs(rfft(kwargs['stocks'][h].volume)))
+            y[h] = np.abs(rfft(kwargs['stocks'][h].volume))
+            freq[h] = fftfreq(len(kwargs['stocks'][h].days), 1)
         else:
             print("Invalid label argument")
             return
-    fig4 = pl.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    ax = fig4.add_subplot(111)
+    fig4, axes = pl.subplots(nrows=1, ncols=2, num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
+    #ax = fig4.add_subplot(111)
     for i in range(len(kwargs['stocks'])):
-        plot = pl.plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
-                                                                            '-' + kwargs['labels'][i]))
+        axes[0].plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
+                                                                         '-' + kwargs['labels'][i]), alpha=0.4)
     peaks, properties = [], []
     for i in range(len(kwargs['stocks'])):
         peaks.append([])
         properties.append([])
-        y_arr = np.transpose(np.array(y[i])[0, :])
-        peaks[i], properties[i], new_fig, new_ax = get_fourier_peaks(y_arr)
-    plot = pl.xlabel('days', fontsize=26)
-    plot = pl.title('Fourier transform', fontsize=28)
-    plot = pl.ylabel('FT', fontsize=26)
-    plot = pl.legend(loc='upper right', prop={'size': 16}, markerscale=7)
-    ax.set_xlim(-10, 400)
+        peaks[i], properties[i] = get_fourier_peaks(y[i], axes[1], label=kwargs['stocks'][i].name +
+                                                                         '-' + kwargs['labels'][i])
+    axes[0].set_xlabel('days', fontsize=26)
+    axes[0].set_title('Fourier transform', fontsize=28)
+    axes[0].set_ylabel('FT', fontsize=26)
+    axes[0].legend(loc='upper right', prop={'size': 16}, markerscale=7)
+    axes[0].set_xlim(-10, 1500)
+    axes[0].set_ylim(-200, 30000)
     #fig4.canvas.manager.window.move(0, 0)
+    fig4.tight_layout()
     pl.show()
     return
 

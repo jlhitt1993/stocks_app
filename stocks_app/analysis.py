@@ -4,14 +4,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_fourier_peaks(x):
+def get_fourier_peaks(x, ax, label):
     peaks, properties = find_peaks(x, height=500, distance=2)
-    fig = plt.figure(num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    ax = fig.add_subplot(1, 2, 2)
-    _ = plt.hist(peaks)
-    return peaks, properties, _, ax
+    ax.hist(peaks, alpha=0.3, label=label, bins=25)
+    ax.set_xlabel("Frequency (", fontsize=26)
+    ax.set_ylabel("Count", fontsize=26)
+    ax.set_title("Frequencies", fontsize=28)
+    ax.set_xlim(0,)
+    ax.legend(loc='upper right', prop={'size': 16}, markerscale=7)
+    return peaks, properties
 
 
 if __name__ == '__main__':
+    fig, ax = plt.subplots()
     peaks, properties = get_fourier_peaks(3)
     print(peaks)
