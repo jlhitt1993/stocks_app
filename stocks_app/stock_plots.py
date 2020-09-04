@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as pl
+from matplotlib import rcParams
 import plotly.graph_objects as go
 from scipy.fftpack import rfft, fftfreq
 from pandas.plotting import register_matplotlib_converters
@@ -165,6 +166,7 @@ def fourier(**kwargs):
         else:
             print("Invalid label argument")
             return
+    rcParams.update({'font.size': 18, 'text.usetex': True})
     fig4, axes = pl.subplots(nrows=1, ncols=2, num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     #ax = fig4.add_subplot(111)
     for i in range(len(kwargs['stocks'])):
@@ -176,7 +178,7 @@ def fourier(**kwargs):
         properties.append([])
         peaks[i], properties[i] = get_fourier_peaks(y[i], axes[1], label=kwargs['stocks'][i].name +
                                                                          '-' + kwargs['labels'][i])
-    axes[0].set_xlabel('days', fontsize=26)
+    axes[0].set_xlabel('1/day', fontsize=26)
     axes[0].set_title('Fourier transform', fontsize=28)
     axes[0].set_ylabel('FT', fontsize=26)
     axes[0].legend(loc='upper right', prop={'size': 16}, markerscale=7)

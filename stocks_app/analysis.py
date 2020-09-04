@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def get_fourier_peaks(x, ax, label):
     peaks, properties = find_peaks(x, height=500, distance=2)
     ax.hist(peaks, alpha=0.3, label=label, bins=25)
-    ax.set_xlabel("Frequency (", fontsize=26)
+    ax.set_xlabel("Frequency (1/day)", fontsize=26)
     ax.set_ylabel("Count", fontsize=26)
     ax.set_title("Frequencies", fontsize=28)
     ax.set_xlim(0,)
