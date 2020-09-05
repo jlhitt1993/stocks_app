@@ -1,7 +1,7 @@
 # Defines functions that make plots
 
 import numpy as np
-import matplotlib.pyplot as pl
+import matplotlib.pyplot as plt
 from matplotlib import rcParams
 import plotly.graph_objects as go
 from scipy.fftpack import rfft, fftfreq
@@ -31,27 +31,28 @@ def spectrum(**kwargs):
     if not check:
         return
     for i in range(len(kwargs['stocks'])):
+        sts.append(np.empty(len(kwargs['stocks'][i].days)))
         if kwargs['labels'][i] == 'high':
-            sts.append(kwargs['stocks'][i].high)
+            sts[i] = kwargs['stocks'][i].high
         elif kwargs['labels'][i] == 'low':
-            sts.append(kwargs['stocks'][i].low)
+            sts[i] = kwargs['stocks'][i].low
         elif kwargs['labels'][i] == 'open':
-            sts.append(kwargs['stocks'][i].open)
+            sts[i] = kwargs['stocks'][i].open
         elif kwargs['labels'][i] == 'close':
-            sts.append(kwargs['stocks'][i].close)
+            sts[i] = kwargs['stocks'][i].close
         elif kwargs['labels'][i] == 'volume':
-            sts.append(kwargs['stocks'][i].volume)
+            sts[i] = kwargs['stocks'][i].volume
         else:
             print("invalid label for " + kwargs['stocks'][i].name)
             return
-    fig1 = pl.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
+    fig1 = plt.figure(num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(kwargs['stocks'])):
-        pl.plot_date(kwargs['stocks'][i].dates, sts[i], xdate=True,
+        plt.plot_date(kwargs['stocks'][i].dates, sts[i], xdate=True,
                      label=(kwargs['stocks'][i].name + '-' + kwargs['labels'][i]), markersize=0.7)
-    pl.title("Spectrum", fontsize=28)
-    pl.legend(loc='upper left', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=7)
+    plt.title("Spectrum", fontsize=28)
+    plt.legend(loc='upper left', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=7)
     #fig1.canvas.manager.window.move(0, 0)
-    pl.show()
+    plt.show()
 
 
 def candlestick(arg):
@@ -69,75 +70,68 @@ def correlation(**kwargs):
         return
     sts = []
     for i in range(len(kwargs['stocks'])):
+        sts.append(np.empty(len(kwargs['stocks'][i].days)))
         if kwargs['labels'][i] == 'high':
-            sts.append(kwargs['stocks'][i].high)
+            sts[i] = np.array(kwargs['stocks'][i].high)
         elif kwargs['labels'][i] == 'low':
-            sts.append(kwargs['stocks'][i].low)
+            sts[i] = np.array(kwargs['stocks'][i].low)
         elif kwargs['labels'][i] == 'open':
-            sts.append(kwargs['stocks'][i].open)
+            sts[i] = np.array(kwargs['stocks'][i].open)
         elif kwargs['labels'][i] == 'close':
-            sts.append(kwargs['stocks'][i].close)
+            sts[i] = np.array(kwargs['stocks'][i].close)
         elif kwargs['labels'][i] == 'volume':
-            sts.append(kwargs['stocks'][i].volume)
+            sts[i] = np.array(kwargs['stocks'][i].volume)
         else:
             print("invalid label for " + kwargs['stocks'][i].name)
             return
-    fig2 = pl.figure(num='Correlation', figsize=(10, 9), dpi=80, facecolor='w', edgecolor='k')
+    fig2 = plt.figure(num='Correlation', figsize=(10, 9), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(sts)-1):
         for ii in range(i+1, len(sts)):
             c = np.corrcoef(sts[i], sts[ii])[0][1]
-            pl.scatter(sts[i], sts[ii], s=1, label=kwargs['stocks'][i].name + '-' + kwargs['labels'][i] + '/' +
+            plt.scatter(sts[i], sts[ii], s=1, label=kwargs['stocks'][i].name + '-' + kwargs['labels'][i] + '/' +
                        kwargs['stocks'][ii].name + '-' + kwargs['labels'][ii] + ' ' + str(c)[:6])
-            pl.title("Correlation", fontsize=28)
-    pl.legend(loc='upper right', scatterpoints=1, prop={'size': 17}, fontsize=7, markerscale=7)
+            plt.title("Correlation", fontsize=28)
+    plt.legend(loc='upper right', scatterpoints=1, prop={'size': 17}, fontsize=7, markerscale=7)
     # legend.set_sizes([34])
     #fig2.canvas.manager.window.move(0, 0)
-    pl.show()
+    plt.show()
 
 
 def percent_change(**kwargs):
     check = check_length(kwargs['stocks'], kwargs['labels'])
     if not check:
         return
-    pc = [[]]
+    pc = []
     dates = []
     for h in range(len(kwargs['stocks'])):
+        pc.append(np.empty(len(kwargs['stocks'][h].days)-1))
         if kwargs["labels"][h] == "high":
-            for i in range(len(kwargs['stocks'][h].high)-1):
-                pc[h].append((kwargs['stocks'][h].high[i+1]-kwargs['stocks'][h].high[i]) /
-                             (kwargs['stocks'][h].high[i]))
+            pc[h] = (kwargs['stocks'][h].high[1:] - kwargs['stocks'][h].high[:-1]) / kwargs['stocks'][h].high[1:]
         elif kwargs["labels"][h] == "low":
-            for i in range(len(kwargs['stocks'][h].low)-1):
-                pc[h].append((kwargs['stocks'][h].low[i+1]-kwargs['stocks'][h].low[i]) /
-                             (kwargs['stocks'][h].low[i]))
+            pc[h] = (kwargs['stocks'][h].low[1:] - kwargs['stocks'][h].low[:-1]) / kwargs['stocks'][h].low[1:]
         elif kwargs["labels"][h] == "close":
-            for i in range(len(kwargs['stocks'][h].high)-1):
-                pc[h].append((kwargs['stocks'][h].close[i+1]-kwargs['stocks'][h].close[i]) /
-                             (kwargs['stocks'][h].close[i]))
+            pc[h] = (kwargs['stocks'][h].close[1:] - kwargs['stocks'][h].close[:-1]) / kwargs['stocks'][h].close[1:]
         elif kwargs["labels"][h] == "open":
-            for i in range(len(kwargs['stocks'][h].high)-1):
-                pc[h].append((kwargs['stocks'][h].open[i+1]-kwargs['stocks'][h].open[i]) /
-                             (kwargs['stocks'][h].open[i]))
+            pc[h] = (kwargs['stocks'][h].open[1:] - kwargs['stocks'][h].open[:-1]) / kwargs['stocks'][h].open[1:]
         elif kwargs["labels"][h] == "volume":
-            for i in range(len(kwargs['stocks'][h].high)-1):
-                pc[h].append((kwargs['stocks'][h].volume[i+1]-kwargs['stocks'][h].volume[i]) /
-                             (kwargs['stocks'][h].volume[i]))
+            pc[h] = (kwargs['stocks'][h].volume[1:] - kwargs['stocks'][h].volume[:-1]) / kwargs['stocks'][h].volume[1:]
         else:
             print("Invalid label argument")
             return
         dates.append(kwargs['stocks'][h].dates)
-        fig3 = pl.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
+        fig3 = plt.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
         ax = fig3.add_subplot(len(kwargs['stocks']), 1, h + 1)
-        pl.plot_date(dates[h][1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' + kwargs["labels"][h]))
+        plt.plot_date(kwargs['stocks'][h].dates[1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' +
+                                                                             kwargs["labels"][h]))
         if h == 0:
-            pl.title('Percent change', fontsize=28)
-        pl.legend(loc='upper right', prop={'size': 16}, handletextpad=-0.2, handlelength=0)
-        pl.ylabel('percent change (%)')
+            plt.title('Percent change', fontsize=28)
+        ax.legend(loc='upper right', prop={'size': 16}, markerscale=0, handlelength=0, handletextpad=0, fancybox=True)
+        plt.ylabel('percent change (%)')
         ax.set_xlim([kwargs['stocks'][h].dates[1], kwargs['stocks'][h].dates[-1]])
         pc.append([])
-    pl.xlabel('day', fontsize=26)
+    plt.xlabel('day', fontsize=26)
     #fig3.canvas.manager.window.move(0, 0)
-    pl.show()
+    plt.show()
 
 
 def fourier(**kwargs):
@@ -166,9 +160,8 @@ def fourier(**kwargs):
         else:
             print("Invalid label argument")
             return
-    rcParams.update({'font.size': 18, 'text.usetex': True})
-    fig4, axes = pl.subplots(nrows=1, ncols=2, num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    #ax = fig4.add_subplot(111)
+    # rcParams.update({'font.size': 18, 'text.usetex': True})
+    fig4, axes = plt.subplots(nrows=1, ncols=2, num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(kwargs['stocks'])):
         axes[0].plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
                                                                          '-' + kwargs['labels'][i]), alpha=0.4)
@@ -186,7 +179,7 @@ def fourier(**kwargs):
     axes[0].set_ylim(-200, 30000)
     #fig4.canvas.manager.window.move(0, 0)
     fig4.tight_layout()
-    pl.show()
+    plt.show()
     return
 
 if __name__ == '__main__':

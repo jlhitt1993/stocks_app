@@ -1,12 +1,12 @@
 # things to add
 
-1) create ability to read a batch file for loading a large amount of
+- create ability to read a batch file for loading a large amount of
 stocks and performing a lot of analysis
-3) add Bollinger bands and candle sticks to spectrum
-5) create website and or document with detailed instructions
-6) Be able to select a date range to consider
-7) Be able to read jsons from any drive
-8) Unit tests
-9) Add GUI
-10) Add docstrings to describe classes and functions
-11) 
+- add Bollinger bands and candle sticks to spectrum
+- create website and or document with detailed instructions
+- Be able to select a date range to consider
+- Be able to read jsons from any drive
+- Unit tests
+- Add GUI
+- Add docstrings to describe classes and functions
+- Add ability to analyze intraday data
