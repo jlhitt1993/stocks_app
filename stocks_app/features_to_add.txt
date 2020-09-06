@@ -5,7 +5,6 @@ stocks and performing a lot of analysis
 - add Bollinger bands and candle sticks to spectrum
 - create website and or document with detailed instructions
 - Be able to select a date range to consider
-- Be able to read jsons from any drive
 - Unit tests
 - Add GUI
 - Add docstrings to describe classes and functions

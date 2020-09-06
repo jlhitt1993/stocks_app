@@ -7,6 +7,7 @@ from time import sleep
 import tkinter as tk
 from tkinter import filedialog
 import numpy as np
+from pandas import read_csv
 
 
 url = "https://www.alphavantage.co/query"
@@ -19,7 +20,7 @@ class Name:
 
 
 class Stock(Name):
-    def __init__(self, name, timescale='daily', **kwargs):
+    def __init__(self, name, timescale='daily', year_month='year1month1', interval='5min', **kwargs):
         Name.__init__(self, name)
         if str(timescale) == 'daily':
             function = 'TIME_SERIES_DAILY'
@@ -45,14 +46,22 @@ class Stock(Name):
                 print("Failed to load the file specified. Please try again.")
                 exit(-1)
         else:
-            request = urllib.request.Request(url + '?function=' + function + '&symbol=' + name +
+            if timescale == 'intraday':
+                request = urllib.request.Request(url + '?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=' + name +
+                                             '&interval=' + interval + '&slice=' + year_month + '&apikey=' + api_key)
+                response = urllib.request.urlopen(request)
+                intraday = read_csv(response)
+            elif timescale == 'daily':
+                request = urllib.request.Request(url + '?function=' + function + '&symbol=' + name +
                                              '&outputsize=full&interval=1min&apikey=' + api_key)
-            response = urllib.request.urlopen(request)
-            data = load(response)
-        #print(data)
+                response = urllib.request.urlopen(request)
+                data = load(response)
+            else:
+                print("The timescale entered is not supported. Please enter either daily or intraday.")
+                exit(0)
         if function == 'TIME_SERIES_DAILY':
             daily = data['Time Series (Daily)']
-            #print(prices)
+            #print(daily)
             self.dates = []
             self.high = np.empty(len(daily))
             self.low = np.empty(len(daily))
@@ -69,17 +78,21 @@ class Stock(Name):
                 self.dates.append(dt.strptime(d, '%Y-%m-%d'))
                 i += 1
             self.days = np.linspace(0, len(self.dates), num=len(self.dates))
-        else:
-            intraday = data['Time Series Intraday Extended']
-            print("this feature is not supported yet.")
-            exit(0)
+        elif function == 'TIME_SERIES_INTRADAY_EXTENDED':
+            #print(intraday)
+            self.dates = intraday['time']
+            self.high = intraday['high']
+            self.low = intraday['low']
+            self.open = intraday['open']
+            self.close = intraday['close']
+            self.volume = intraday['volume']
         print('Got: ' + name + '')
         if ('local' not in kwargs.keys()) or ('file' not in kwargs.keys()):
             sleep(0.2)
 
 
 if __name__ == '__main__':
-    aapl = Stock('aapl')
-    print(aapl.name)
+    aapl = Stock('aapl', timescale='intraday')
+#    print(aapl.name)
 #    amd = Stock('amd')
 #    msft = Stock('msft')
