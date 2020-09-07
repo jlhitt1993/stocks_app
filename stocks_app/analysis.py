@@ -11,6 +11,7 @@ def get_fourier_peaks(x, ax, label):
     ax.set_ylabel("Count", fontsize=26)
     ax.set_title("Frequencies", fontsize=28)
     ax.set_xlim(0,)
+    ax.tick_params(axis='both', which='major', labelsize=14)
     ax.legend(loc='upper right', prop={'size': 16}, markerscale=7)
     return peaks, properties
 

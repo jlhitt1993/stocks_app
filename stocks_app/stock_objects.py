@@ -56,6 +56,12 @@ class Stock(Name):
                                              '&outputsize=full&interval=1min&apikey=' + api_key)
                 response = urllib.request.urlopen(request)
                 data = load(response)
+                try:
+                    test = data['Note']
+                    print("api call limit reached. Need to upgrade api key or wait a minute")
+                    exit(-1)
+                except:
+                    sleep(0.001)
             else:
                 print("The timescale entered is not supported. Please enter either daily or intraday.")
                 exit(0)
@@ -88,7 +94,7 @@ class Stock(Name):
             self.volume = intraday['volume']
         print('Got: ' + name + '')
         if ('local' not in kwargs.keys()) or ('file' not in kwargs.keys()):
-            sleep(0.2)
+            sleep(0.5)
 
 
 if __name__ == '__main__':

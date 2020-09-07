@@ -1,4 +1,5 @@
-aapl
-amd
-msft
-lmt
+aapl open
+amd open
+msft open
+lmt open
+rtn open
