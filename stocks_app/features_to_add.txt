@@ -9,3 +9,5 @@ stocks and performing a lot of analysis
 - Add GUI
 - Add docstrings to describe classes and functions
 - Add ability to analyze intraday data
+- Use percent change data to calculate the probability that a stock will go up on an average day
+- Bootstrap the stock price and fit to line or curve

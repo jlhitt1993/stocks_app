@@ -7,6 +7,8 @@ import plotly.graph_objects as go
 from scipy.fftpack import rfft, fftfreq
 from pandas.plotting import register_matplotlib_converters
 from analysis import get_fourier_peaks
+import matplotlib.gridspec as gridspec
+import seaborn as sns
 
 register_matplotlib_converters()
 
@@ -108,7 +110,14 @@ def percent_change(**kwargs):
     if not check:
         return
     pc = []
+    axes, names, colors = [], [], sns.color_palette("Paired", len(kwargs['stocks']))
+    prob = np.empty(len(kwargs['stocks']))
+    fig3 = plt.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w',
+                      edgecolor='k')
+    spec3 = gridspec.GridSpec(ncols=2, nrows=len(kwargs['stocks']), width_ratios=[len(kwargs['stocks']), 1],
+                              height_ratios=[1 for x in range(len(kwargs['stocks'])-1)].append(len(kwargs['stocks'])))
     for h in range(len(kwargs['stocks'])):
+        names.append([])
         pc.append(np.empty(len(kwargs['stocks'][h].dates)-1))
         if kwargs["labels"][h] == "high":
             pc[h] = (kwargs['stocks'][h].high[1:] - kwargs['stocks'][h].high[:-1]) / kwargs['stocks'][h].high[1:]
@@ -123,16 +132,20 @@ def percent_change(**kwargs):
         else:
             print("Invalid label argument")
             return
-        fig3 = plt.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
-        ax = fig3.add_subplot(len(kwargs['stocks']), 1, h + 1)
-        plt.plot_date(kwargs['stocks'][h].dates[1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' +
-                                                                             kwargs["labels"][h]))
-        if h == 0:
-            plt.title('Percent change', fontsize=28)
-        ax.legend(loc='upper right', prop={'size': 16}, markerscale=0, handlelength=0, handletextpad=0, fancybox=True)
-        plt.ylabel('percent change (%)')
-        ax.set_xlim([kwargs['stocks'][h].dates[1], kwargs['stocks'][h].dates[-1]])
-    plt.xlabel('day', fontsize=26)
+        prob[h] = np.sum(pc[h][pc[h] > 0])/len(pc[h])
+        axes = fig3.add_subplot(spec3[h, 0])
+        axes.plot_date(kwargs['stocks'][h].dates[1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' +
+                                            kwargs["labels"][h] + ' P: ' + "{:0.6f}".format(prob[h])), color=colors[h])
+        if h == len(kwargs['stocks']):
+            axes.set_title('Percent change', fontsize=28)
+        axes.legend(loc='upper right', prop={'size': 16}, markerscale=0, handlelength=0, handletextpad=0, fancybox=True)
+        axes.set_ylabel('percent change (%)')
+        axes.set_xlim([kwargs['stocks'][h].dates[1], kwargs['stocks'][h].dates[-1]])
+        names[h] = kwargs['stocks'][h].name
+    axes.set_xlabel('day', fontsize=26)
+    axes2 = fig3.add_subplot(spec3[0, 1])
+    axes2.bar(names, prob, color=colors)
+    axes2.set_ylabel('Probability of increase')
     #fig3.canvas.manager.window.move(0, 0)
     fig3.tight_layout()
     plt.show()
