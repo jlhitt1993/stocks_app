@@ -20,7 +20,8 @@ _______________
 
 #### Loading data
 
-- To get data about AAPL, type `AAPL = Stock('aapl')`. This will create
+- Import the library with `import stocks_app as sa`
+- To get data about AAPL, type `AAPL = sa.Stock('aapl')`. This will create
 a stock object called `AAPL`.
 - Stock objects have eight attributes: name, high, low, open, close,
     dates, days, volume.
@@ -37,12 +38,12 @@ a stock object called `AAPL`.
 All graphs can be plotted with more than one stock at a time and
 the correlation graph requires at least two stocks. <br> The arguements 
 for each function must be passed as keywords as shown below.
-- `specturm(stocks=[AAPL], labels=['high'])` will make a plot of AAPL's high
+- `sa.specturm(stocks=[AAPL], labels=['high'])` will make a plot of AAPL's high
 every day since the stock has been listed.
-- `correlation(stocks=[AAPL, MSFT], labels=['high', 'low']`
-- `percent_change(stocks=[AAPL], labels=['high'])`
-- `candlestick(AAPL)`
-- `fourier(stocks=[AAPL], labels=['high'])`
+- `sa.correlation(stocks=[AAPL, MSFT], labels=['high', 'low']`
+- `sa.percent_change(stocks=[AAPL], labels=['high'])`
+- `sa.candlestick(AAPL)`
+- `sa.fourier(stocks=[AAPL], labels=['high'])`
 
 ### Advanced usage
 
@@ -51,11 +52,11 @@ It's possible to analyze market data stored on local files.
 format as is used by www.alphavantage.com. <br> An example json is also 
 included in this package directory.
     - To load a local file, set the keyword argument `local` to True as shown 
-`AAPL = Stocks('aapl', local=True)`
+`AAPL = sa.Stocks('aapl', local=True)`
 
 ### Analyzing a large set of stocks
 
 A list of stocks can be provided in stock_list.txt to be downloaded and analyzed later.
 - Fill in the list in stock_list.txt and save the file. 
 - Run read_stock_list.py and choose the directory to save the json files.
-- Use the `local` argument in `Stock()` to import the json data from the local files.
+- Use the `local=True` argument in `Stock()` to import the json data from the local files.
