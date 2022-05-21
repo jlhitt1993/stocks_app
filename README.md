@@ -1,6 +1,6 @@
 # Stocks App
 
-This API can easily fetch data about the stock market and create
+This script can easily fetch data about the stock market and create
 unique graphs from the data. <br> It is intended to be used for an analysis
 tool for trading. All the stock data fetched online comes <br> from 
 https://www.alphavantage.co/query and is subject to their restrictions.
