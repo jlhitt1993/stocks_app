@@ -55,7 +55,6 @@ def spectrum(**kwargs):
     axes.legend(loc='upper left', scatterpoints=1, prop={'size': 24}, fontsize=8, markerscale=7)
     #fig1.canvas.manager.window.move(0, 0)
     fig1.tight_layout()
-    plt.show()
 
 
 def candlestick(arg):
@@ -100,7 +99,6 @@ def correlation(**kwargs):
     # legend.set_sizes([34])
     #fig2.canvas.manager.window.move(0, 0)
     fig2.tight_layout()
-    plt.show()
 
 
 def percent_change(**kwargs):
@@ -108,6 +106,7 @@ def percent_change(**kwargs):
     if not check:
         return
     pc = []
+    cumm_pc = []
     for h in range(len(kwargs['stocks'])):
         pc.append(np.empty(len(kwargs['stocks'][h].dates)-1))
         if kwargs["labels"][h] == "high":
@@ -123,20 +122,26 @@ def percent_change(**kwargs):
         else:
             print("Invalid label argument")
             return
+        cumm_pc.append(np.cumsum(-100*pc[h][::-1])[::-1])
         fig3 = plt.figure(num='Percent change', figsize=(18, 9), dpi=80, facecolor='w', edgecolor='k')
         ax = fig3.add_subplot(len(kwargs['stocks']), 1, h + 1)
-        plt.plot_date(kwargs['stocks'][h].dates[1:], pc[h], markersize=2, label=(kwargs['stocks'][h].name + '-' +
-                                                                             kwargs["labels"][h]))
+        plt.plot_date(kwargs['stocks'][h].dates[1:], pc[h], markersize=2,
+                      label=(kwargs['stocks'][h].name + '-' + kwargs["labels"][h]))
+        ax2 = ax.twinx()
+        ax2.plot_date(kwargs['stocks'][h].dates[1:], cumm_pc[h], markersize=2, label='cumm change',
+                      color='red')
+        ax2.set_ylabel('cumm. pct change')
+        ax2.hlines(0, [kwargs['stocks'][h].dates[1]], kwargs['stocks'][h].dates[-1], colors='black')
         if h == 0:
             plt.title('Percent change', fontsize=28)
         ax.legend(loc='upper right', prop={'size': 16}, markerscale=0, handlelength=0, handletextpad=0, fancybox=True)
-        plt.ylabel('percent change (%)')
-        ax.set_ylim(-0.2, 0.2)
-        ax.set_xlim([kwargs['stocks'][h].dates[1], kwargs['stocks'][h].dates[-1]])
+        ax.set_ylabel('percent change (%)')
+        #ax.set_ylim(-0.2, 0.2)
+        ax.set_xlim([kwargs['stocks'][h].dates[-1], kwargs['stocks'][h].dates[1]])
+        #print(kwargs['stocks'][h].dates)
     plt.xlabel('day', fontsize=26)
     #fig3.canvas.manager.window.move(0, 0)
     fig3.tight_layout()
-    plt.show()
 
 
 def fourier(**kwargs):
@@ -184,7 +189,6 @@ def fourier(**kwargs):
     axes[0].set_ylim(-200, 30000)
     #fig4.canvas.manager.window.move(0, 0)
     fig4.tight_layout()
-    plt.show()
     return
 
 if __name__ == '__main__':

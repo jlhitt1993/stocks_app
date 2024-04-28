@@ -10,3 +10,5 @@ stocks and performing a lot of analysis
 - Add docstrings to describe classes and functions
 - Add ability to analyze intraday data
 - look for trends in the percent change data
+- add plot to calculate the cumulative area under the percent change graph
+  Make this a second axis on the percent change graph

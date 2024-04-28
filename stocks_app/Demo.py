@@ -2,6 +2,7 @@
 
 from stock_objects import Stock
 from stock_plots import correlation, percent_change, fourier, spectrum, candlestick
+import matplotlib.pyplot as plt
 
 print("Welcome to stocks_app! This is a short demo that will show you some of the things that are possible with "
       "stocks_app.")
@@ -15,3 +16,4 @@ percent_change(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
 spectrum(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
 fourier(stocks=[AAPL, AMD, MSFT], labels=['high', 'low', 'open'])
 # help()
+plt.show()
