@@ -9,3 +9,4 @@ stocks and performing a lot of analysis
 - Add GUI
 - Add docstrings to describe classes and functions
 - Add ability to analyze intraday data
+- look for trends in the percent change data

@@ -58,7 +58,7 @@ class Stock(Name):
                 data = load(response)
             else:
                 print("The timescale entered is not supported. Please enter either daily or intraday.")
-                exit(0)
+                exit(-1)
         if function == 'TIME_SERIES_DAILY':
             daily = data['Time Series (Daily)']
             #print(daily)

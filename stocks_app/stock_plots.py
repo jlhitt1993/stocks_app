@@ -19,7 +19,7 @@ def check_length(stocks, labels):
     :return: bool. False if the lengths are not equal, True otherwise.
     """
     if len(stocks) != (len(labels)):
-        print("List of stocks does not match list of labels")
+        print("Number of stocks does not match number of labels")
         return False
     else:
         return True
@@ -131,6 +131,7 @@ def percent_change(**kwargs):
             plt.title('Percent change', fontsize=28)
         ax.legend(loc='upper right', prop={'size': 16}, markerscale=0, handlelength=0, handletextpad=0, fancybox=True)
         plt.ylabel('percent change (%)')
+        ax.set_ylim(-0.2, 0.2)
         ax.set_xlim([kwargs['stocks'][h].dates[1], kwargs['stocks'][h].dates[-1]])
     plt.xlabel('day', fontsize=26)
     #fig3.canvas.manager.window.move(0, 0)
