@@ -26,5 +26,6 @@ def save_json(args):
         sleep(0.1)
     root.destroy()
 
+
 if __name__ == '__main__':
     save_json(['aapl'])

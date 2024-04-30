@@ -1,6 +1,7 @@
 # Defines functions that make plots
 
 import numpy as np
+from _datetime import datetime as dt
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 import plotly.graph_objects as go
@@ -25,30 +26,48 @@ def check_length(stocks, labels):
         return True
 
 
-def spectrum(**kwargs):
+def spectrum(stocks, labels, start_dates=None, end_dates=None):
     sts = []
-    check = check_length(kwargs['stocks'], kwargs['labels'])
+    check = check_length(stocks, labels)
     if not check:
         return
-    for i in range(len(kwargs['stocks'])):
-        sts.append(np.empty(len(kwargs['stocks'][i].dates)))
-        if kwargs['labels'][i] == 'high':
-            sts[i] = kwargs['stocks'][i].high
-        elif kwargs['labels'][i] == 'low':
-            sts[i] = kwargs['stocks'][i].low
-        elif kwargs['labels'][i] == 'open':
-            sts[i] = kwargs['stocks'][i].open
-        elif kwargs['labels'][i] == 'close':
-            sts[i] = kwargs['stocks'][i].close
-        elif kwargs['labels'][i] == 'volume':
-            sts[i] = kwargs['stocks'][i].volume
+    start_date = []
+    end_date = []
+    if start_dates is None and end_dates is None:
+        for i in range(len(stocks)):
+            start_date.append(stocks[i].dates[0])
+            end_date.append(stocks[i].dates[-1])
+    else:
+        for i in range(len(stocks)):
+            start_date.append(dt.strptime(start_dates[i], '%Y-%m-%d'))
+            end_date.append(dt.strptime(end_dates[i], '%Y-%m-%d'))
+    for i in range(len(stocks)):
+        sts.append(np.empty(len(stocks[i].dates)))
+        if labels[i] == 'high':
+            sts[i] = stocks[i].high[(stocks[i].dates > start_date[i]) |
+                                    (stocks[i].dates < end_date[i])]
+        elif labels[i] == 'low':
+            sts[i] = stocks[i].low[(stocks[i].dates > start_date[i]) |
+                                   (stocks[i].dates < end_date[i])]
+        elif labels[i] == 'open':
+            sts[i] = stocks[i].open[(stocks[i].dates > start_date[i]) |
+                                    (stocks[i].dates < end_date[i])]
+        elif labels[i] == 'close':
+            sts[i] = stocks[i].close[(stocks[i].dates > start_date[i]) |
+                                     (stocks[i].dates < end_date[i])]
+        elif labels[i] == 'volume':
+            sts[i] = stocks[i].volume[(stocks[i].dates > start_date[i]) |
+                                      (stocks[i].dates < end_date[i])]
         else:
-            print("invalid label for " + kwargs['stocks'][i].name)
+            print("invalid label for " + stocks[i].name)
             return
-    fig1, axes = plt.subplots(nrows=1, ncols=1, num='Spectrum', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
-    for i in range(len(kwargs['stocks'])):
-        axes.plot_date(kwargs['stocks'][i].dates, sts[i], xdate=True,
-                     label=(kwargs['stocks'][i].name + '-' + kwargs['labels'][i]), markersize=0.7)
+        stocks[i].dates = stocks[i].dates[stocks[i].dates > dt.strptime('2020-01-01', '%Y-%m-%d')]
+    fig1, axes = plt.subplots(nrows=1, ncols=1, num='Spectrum', figsize=(18, 8), dpi=80,
+                              facecolor='w', edgecolor='k')
+    for i in range(len(stocks)):
+        axes.plot(stocks[i].dates, sts[i], xdate=True,
+                       label=(stocks[i].name + '-' + labels[i]), markersize=0.7)
+    axes.xaxis_date()
     axes.set_title("Spectrum", fontsize=28)
     axes.set_xlabel("Date", fontsize=20)
     axes.set_ylabel("Price ($)", fontsize=20)
@@ -149,6 +168,7 @@ def fourier(**kwargs):
     if not check:
         return
     y, freq = [], []
+    maxi = 0
     for h in range(len(kwargs['stocks'])):
         y.append(np.empty(len(kwargs['stocks'][h].dates)))
         freq.append(np.empty(len(kwargs['stocks'][h].dates)))
@@ -170,26 +190,32 @@ def fourier(**kwargs):
         else:
             print("Invalid label argument")
             return
+        y[h] = y[h][y[h] > 0.0]
+        freq[h] = freq[h][y[h] > 0.0]
+    for h in range(len(kwargs['stocks'])):
+        if max(y[h]) > maxi:
+            maxi = max(y[h])
     # rcParams.update({'font.size': 18, 'text.usetex': True})
     fig4, axes = plt.subplots(nrows=1, ncols=2, num='Fourier transform', figsize=(18, 8), dpi=80, facecolor='w', edgecolor='k')
     for i in range(len(kwargs['stocks'])):
-        axes[0].plot(kwargs['stocks'][i].days, np.transpose(y[i]), label=(kwargs['stocks'][i].name +
-                                                                         '-' + kwargs['labels'][i]), alpha=0.4)
-    peaks, properties = [], []
+        axes[0].plot(freq[i], np.transpose(y[i]), label=(kwargs['stocks'][i].name +
+                     '-' + kwargs['labels'][i]), alpha=0.4)
+    peak_ind, properties = [], []
     for i in range(len(kwargs['stocks'])):
-        peaks.append([])
+        peak_ind.append([])
         properties.append([])
-        peaks[i], properties[i] = get_fourier_peaks(y[i], axes[1], label=kwargs['stocks'][i].name +
-                                                                         '-' + kwargs['labels'][i])
+        peak_ind[i], properties[i] = get_fourier_peaks(y[i], freq[i], axes[1], label=kwargs['stocks'][i].name +
+                                                       '-' + kwargs['labels'][i])
     axes[0].set_xlabel('1/day', fontsize=26)
     axes[0].set_title('Fourier transform', fontsize=28)
     axes[0].set_ylabel('FT', fontsize=26)
     axes[0].legend(loc='upper right', prop={'size': 16}, markerscale=7)
-    axes[0].set_xlim(-10, 1500)
-    axes[0].set_ylim(-200, 30000)
+    axes[0].set_xlim(-0.01, 0.2)
+    axes[0].set_ylim(-200, maxi)
     #fig4.canvas.manager.window.move(0, 0)
     fig4.tight_layout()
     return
+
 
 if __name__ == '__main__':
     print("Start by creating stock objects like aapl = Stock('aapl') \n")
